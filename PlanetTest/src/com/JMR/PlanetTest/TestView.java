@@ -156,8 +156,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			else
 			{
-				doZoom(event.getX(0),startX1,event.getY(0),startY1,
-						event.getX(1),startX2,event.getY(1),startY2);
+				doZoom(event.getX(0),event.getY(0),
+						event.getX(1),event.getY(1));
 				startX1 = event.getX(0);
 				startY1 = event.getY(0);
 				startX2 = event.getX(1);
@@ -170,16 +170,16 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		return true;
 	}
 
-	private void doZoom(float x1, float historicalX1, float y1, float historicalY1,
-			float x2, float historicalX2, float y2, float historicalY2) {
+	private void doZoom(float x1, float y1,
+			float x2, float y2) {
 		GameState state = GameState.getInstance();
 		float dist1, dist2;
 		
 		dist1 = (float) Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-		dist2 = (float) Math.sqrt((historicalX2-historicalX1)*(historicalX2-historicalX1)+
-				(historicalY2-historicalY1)*(historicalY2-historicalY1));
+		dist2 = (float) Math.sqrt((startX2-startX1)*(startX2-startX1)+
+				(startY2-startY1)*(startY2-startY1));
 		
-		float deltaDist = (float) (dist1-dist2);
+		float deltaDist = (float) (dist2-dist1);
 		float ratio = deltaDist/dist1;
 		state.gameCanvas.scale(1.0f-ratio, 1.0f-ratio, (x1+x2)/2, (y1+y2)/2);
 	}
