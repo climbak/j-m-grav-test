@@ -212,7 +212,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 		else if (points[2] < myCanvas.getWidth())
 		{
-			state.gameCanvas.translate(points[2], 0.0f);
+			state.gameCanvas.translate(myCanvas.getWidth()-points[2], 0.0f);
 		}
 		
 		if (points[1] > 0.0f)
@@ -221,7 +221,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 		else if (points[3] < myCanvas.getHeight())
 		{
-			state.gameCanvas.translate(0.0f, points[3]);
+			state.gameCanvas.translate(0.0f, myCanvas.getHeight()-points[3]);
 		}
 	}
 

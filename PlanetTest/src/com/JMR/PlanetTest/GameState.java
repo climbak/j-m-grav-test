@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 public class GameState {
-	public static final int CANVAS_WIDTH = 800;
-	public static final int CANVAS_HEIGHT = 1024;
+	public static final int CANVAS_WIDTH = 1080;
+	public static final int CANVAS_HEIGHT = 1920;
 	
 	public static GameState instance;
 	
