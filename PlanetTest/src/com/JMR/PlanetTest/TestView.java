@@ -16,8 +16,14 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 	public static final double PLANET_SIZE_JITTER = 0.01;
 		
 	private Thread mThread;
+
+	private float sensitivity = 0.75f;
 	
 	private SurfaceHolder surfaceHolder;
+	private float startX1;
+	private float startY1;
+	private float startX2;
+	private float startY2;
 	
 	public TestView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -120,20 +126,37 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// We only care if there is movement (for this test)
-		Log.d("TestVeiw.onTouchEvent", new Integer(MotionEvent.ACTION_DOWN).toString());
 		Log.d("TestView.onTouchEvent", "TOUCH EVENT");
-		if (event.getAction() == MotionEvent.ACTION_MOVE)
+		if (event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			
+			startX1 = event.getX(0);
+			startY1 = event.getY(0);
+			startX2 = event.getX(1);
+			startY2 = event.getY(1);
+		}
+		else if (event.getAction() == MotionEvent.ACTION_UP)
+		{
+			
+		}
+		else if (event.getAction() == MotionEvent.ACTION_MOVE)
 		{
 			Log.d("TestView.onTouchEvent", "MOVE EVENT");
 			// If there is only one pointer, we're scrolling, otherwise zooming:
 			if (event.getPointerCount() == 1)
 			{
-				doTranslate(event.getX(0),event.getHistoricalX(0,1),event.getY(0),event.getHistoricalY(0,1));
+				doTranslate(event.getX(0),startX1,event.getY(0),startY1);
+				startX1 = event.getX(0);
+				startY1 = event.getY(0);				
 			}
 			else
 			{
-				doZoom(event.getX(0),event.getHistoricalX(0,1),event.getY(0),event.getHistoricalY(0,1),
-						event.getX(1),event.getHistoricalX(1,1),event.getY(1),event.getHistoricalY(1,1));
+				doZoom(event.getX(0),startX1,event.getY(0),startY1,
+						event.getX(1),startX2,event.getY(1),startY2);
+				startX1 = event.getX(0);
+				startY1 = event.getY(0);
+				startX2 = event.getX(1);
+				startY2 = event.getY(1);
 			}
 			
 		}
@@ -164,7 +187,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		dx = x - historicalX;
 		dy = y - historicalY;
 		
-		state.gameCanvas.translate(dx, dy);
+		state.gameCanvas.translate(dx*sensitivity, dy*sensitivity);
 		
 		// TODO IMPLEMENT PREVENTION OF SCROLLING OFF SCREEN!!!
 	}
