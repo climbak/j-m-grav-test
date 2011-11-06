@@ -111,8 +111,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 				}
 				
 				// Draw the bitmap from the game canvas to the screen surface, with the transform matrix:
-				//c.drawBitmap(state.gameMap, new Matrix(), null);
-				c.drawBitmap(state.gameMap, state.gameCanvas.getMatrix(), null);
+				c.drawBitmap(state.gameMap, new Matrix(), null);
+				//c.drawBitmap(state.gameMap, state.gameCanvas.getMatrix(), null);
 			}
 		}
 	}
