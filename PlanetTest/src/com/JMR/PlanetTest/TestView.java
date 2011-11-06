@@ -25,7 +25,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		// Do surface bureaucracy: 
 		surfaceHolder = this.getHolder();
 		surfaceHolder.addCallback(this);
-		
+				
 		mThread = new TestThread(surfaceHolder, context, new Handler());
 		
 		setFocusable(true);
@@ -117,8 +117,10 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 	
+	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// We only care if there is movement (for this test)
+		Log.d("TestVeiw.onTouchEvent", new Integer(MotionEvent.ACTION_DOWN).toString());
 		Log.d("TestView.onTouchEvent", "TOUCH EVENT");
 		if (event.getAction() == MotionEvent.ACTION_MOVE)
 		{
@@ -134,12 +136,10 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 						event.getX(1),event.getHistoricalX(1,1),event.getY(1),event.getHistoricalY(1,1));
 			}
 			
-			// We consumed the event:
-			// return true;
 		}
 		
-		// We did not consume the event:
-		return super.onTouchEvent(event);
+		// We consumed the event:
+		return true;
 	}
 
 	private void doZoom(float x1, float historicalX1, float y1, float historicalY1,
