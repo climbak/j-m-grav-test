@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 public class Background extends Drawable {
-	public static final int NUM_STARS = 10000;
+	public static final int NUM_STARS = 1000;
 	
 	public static final float YELLOW_PERCENT = 0.33f;
 	public static final float WHITE_PERCENT = 0.33f;
