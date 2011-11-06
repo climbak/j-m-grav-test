@@ -34,6 +34,13 @@ public class PlanetTestActivity extends Activity {
     
     @Override
     public void onPause() {
-    	// mTestThread.suspend();
+    	((TestView.TestThread)mTestThread).running = false;
+    	super.onPause();
+    }
+    
+    @Override
+    public void onResume() {
+    	((TestView.TestThread)mTestThread).running = true;
+    	super.onResume();
     }
 }
