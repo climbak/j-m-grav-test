@@ -24,6 +24,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 	private float startY1;
 	private float startX2;
 	private float startY2;
+	public Canvas myCanvas;
 	
 	public TestView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -100,6 +101,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		private void doDraw(Canvas c) {
+			if (myCanvas == null) myCanvas = c;
 			if (c != null) {
 				// Draw background to game canvas:
 				if (theBackground == null){
@@ -132,8 +134,11 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			
 			startX1 = event.getX(0);
 			startY1 = event.getY(0);
-			startX2 = event.getX(1);
-			startY2 = event.getY(1);
+			if (event.getPointerCount() > 1)
+			{
+				startX2 = event.getX(1);
+				startY2 = event.getY(1);
+			}
 		}
 		else if (event.getAction() == MotionEvent.ACTION_UP)
 		{
@@ -184,12 +189,40 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		GameState state = GameState.getInstance();
 		float dx, dy;
 		
-		dx = x - historicalX;
-		dy = y - historicalY;
+		dx = x - startX1;
+		dy = y - startY1;
 		
 		state.gameCanvas.translate(dx*sensitivity, dy*sensitivity);
 		
-		// TODO IMPLEMENT PREVENTION OF SCROLLING OFF SCREEN!!!
+		Matrix currMat = state.gameCanvas.getMatrix();
+		
+		float[] points = new float[4];
+		points[0] = 0.0f;	// Top left
+		points[1] = 0.0f;
+	 
+		points[2] = state.gameCanvas.getWidth(); // Bottom right
+		points[3] = state.gameCanvas.getHeight();
+		
+		currMat.mapPoints(points);
+		
+		// Check to see if we've scrolled our bitmap outside the screen rect:
+		if (points[0] > 0.0f)
+		{
+			state.gameCanvas.translate(-points[0], 0.0f);
+		}
+		else if (points[2] < myCanvas.getWidth())
+		{
+			state.gameCanvas.translate(points[2], 0.0f);
+		}
+		
+		if (points[1] > 0.0f)
+		{
+			state.gameCanvas.translate(0.0f, -points[1]);
+		}
+		else if (points[3] < myCanvas.getHeight())
+		{
+			state.gameCanvas.translate(0.0f, points[3]);
+		}
 	}
 
 	@Override
