@@ -12,8 +12,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class TestView extends SurfaceView implements SurfaceHolder.Callback {
-	public static final double MEAN_PLANET_SIZE = 0.01; // Expressed as percent of canvas size
-	public static final double PLANET_SIZE_JITTER = 0.004;
+	public static final double MEAN_PLANET_SIZE = 0.03; // Expressed as percent of canvas size
+	public static final double PLANET_SIZE_JITTER = 0.01;
 		
 	private Thread mThread;
 	
@@ -135,11 +135,11 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			
 			// We consumed the event:
-			return true;
+			// return true;
 		}
 		
 		// We did not consume the event:
-		return false;
+		return super.onTouchEvent(event);
 	}
 
 	private void doZoom(float x1, float historicalX1, float y1, float historicalY1,

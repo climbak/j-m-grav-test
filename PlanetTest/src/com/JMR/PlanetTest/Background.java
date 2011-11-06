@@ -21,7 +21,7 @@ public class Background extends Drawable {
 	public static final int[] BLUE_RGB = {255*9/16,255*11/16,255};
 	public static final int[] WHITE_RGB = {255,255,255};
 	public static final int[] YELLOW_RGB = {255,255,128};
-	public static final int[] RED_RGB = {255,255*12/16,128};
+	public static final int[] RED_RGB = {255,128,128};
 	
 	private float redStars[];
 	private float yellowStars[];
