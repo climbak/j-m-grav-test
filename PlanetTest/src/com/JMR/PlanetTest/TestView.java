@@ -47,8 +47,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		private int landscape;
 		
 		private Background theBackground;
-		private Planet somePlanets[];
-		private Planet someStars[];
+		private BoardObject somePlanets[];
+		private BoardObject someStars[];
 		private int numPlanets;
 		private int numStars;
 		private GameState state;
@@ -68,7 +68,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			theBackground = new Background(state.gameCanvas);
 			
 			// Create some planets:
-			somePlanets = new Planet[numPlanets];
+			somePlanets = new BoardObject[numPlanets];
 			for (int i = 0; i < numPlanets; i++)
 			{
 				somePlanets[i] = new CirclePlanet();
@@ -86,7 +86,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			
 			// Create some stars:
-			someStars = new Planet[numStars];
+			someStars = new BoardObject[numStars];
 			for (int i = 0; i < numStars; i++)
 			{
 				someStars[i] = new Star((int)(Math.random()*100)/25);

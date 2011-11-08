@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 
-public abstract class Planet extends Drawable implements Animatable {
+public abstract class BoardObject extends Drawable implements Animatable {
 	public float g = 0.0f;
 	public int radius = 0;
 	public boolean canHaveTurrets = false;

@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 
-public class CirclePlanet extends Planet {
+public class CirclePlanet extends BoardObject {
 
 	@Override
 	public boolean isRunning() {
