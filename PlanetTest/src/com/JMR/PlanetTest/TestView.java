@@ -12,8 +12,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class TestView extends SurfaceView implements SurfaceHolder.Callback {
-	public static final double MEAN_PLANET_SIZE = 0.03; // Expressed as percent of canvas size
-	public static final double PLANET_SIZE_JITTER = 0.01;
 		
 	private Thread mThread;
 
@@ -44,64 +42,16 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		private Context mContext;
 		private Handler mHandler;
 		public boolean running = true;
-		private int landscape;
 		
-		private Background theBackground;
-		private BoardObject somePlanets[];
-		private BoardObject someStars[];
-		private int numPlanets;
-		private int numStars;
-		private GameState state;
+		private GameState theGame;
 		
 		public TestThread(SurfaceHolder holder, Context context, Handler handler){
-			int rectCX,rectCY;
-			int size;
-			landscape = -1;
-			
 			mHandler = handler;
 			mHolder = holder;
 			mContext = context;
-			numPlanets = (int)(Math.random()*20);
-			numStars = (int)(Math.random()*5)+2;
 			
-			state = GameState.getInstance();
-			theBackground = new Background(state.gameCanvas);
+			theGame = GameState.getInstance();
 			
-			// Create some planets:
-			somePlanets = new BoardObject[numPlanets];
-			for (int i = 0; i < numPlanets; i++)
-			{
-				somePlanets[i] = new CirclePlanet();
-				
-				// Make some random center:
-				rectCX = (int) (Math.random()*state.gameMap.getWidth());
-				rectCY = (int) (Math.random()*state.gameMap.getHeight());
-				
-				// Make some random size:
-				size = (int) ((Math.random()*PLANET_SIZE_JITTER-(PLANET_SIZE_JITTER/2.0)+MEAN_PLANET_SIZE)*
-						state.gameMap.getWidth());
-				
-				somePlanets[i].setBounds(new Rect((int)(rectCX - (size/2.0)), (int)(rectCY - (size/2.0)),
-										(int)(rectCX + (size/2.0)), (int)(rectCY + (size/2.0))));
-			}
-			
-			// Create some stars:
-			someStars = new BoardObject[numStars];
-			for (int i = 0; i < numStars; i++)
-			{
-				someStars[i] = new Star((int)(Math.random()*100)/25);
-				
-				// Make some random center:
-				rectCX = (int) (Math.random()*state.gameMap.getWidth());
-				rectCY = (int) (Math.random()*state.gameMap.getHeight());
-				
-				// Make some random size:
-				size = (int) ((Math.random()*PLANET_SIZE_JITTER-(PLANET_SIZE_JITTER/2.0)+MEAN_PLANET_SIZE*2.)*
-						state.gameMap.getWidth());
-				
-				someStars[i].setBounds(new Rect((int)(rectCX - (size/2.0)), (int)(rectCY - (size/2.0)),
-										(int)(rectCX + (size/2.0)), (int)(rectCY + (size/2.0))));
-			}
 		}
 		
 		@Override
@@ -126,40 +76,10 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		private void doDraw(Canvas c) {
 			// Get a copy of the canvas, for screen dimension stuff:
 			if (myCanvas == null) myCanvas = c;
-			
-			// Make sure we orient the game board properly:
-			if (landscape == -1 && c != null) {
-				if (c.getWidth() > c.getHeight()) {
-					landscape = 1;
-					state.flip();
-				}
-				else landscape = 0;
-			}
-			
+						
 			// Make sure not to try drawing to a canvas should we be called before we get one:
 			if (c != null) {
-				// Draw background to game canvas:
-				if (theBackground == null){
-					Log.d("TestView.onDraw", "BACKGROUND OBJECT IS NULL!");
-				}
-				else if (state.gameCanvas == null){
-					Log.d("TestView.onDraw", "GAME CANVAS OBJECT IS NULL!");
-				}
-				theBackground.draw(state.gameCanvas);
-				
-				// Draw the planets to the game canvas:
-				for (int i = 0; i < numPlanets; i++)
-				{
-					somePlanets[i].draw(state.gameCanvas);
-				}
-				for (int i = 0; i < numStars; i++)
-				{
-					someStars[i].draw(state.gameCanvas);
-				}
-				
-				// Draw the bitmap from the game canvas to the screen surface, with the transform matrix:
-				c.drawBitmap(state.gameMap, new Matrix(), null);
-				//c.drawBitmap(state.gameMap, state.gameCanvas.getMatrix(), null);
+				theGame.draw(c);
 			}
 		}
 	}
