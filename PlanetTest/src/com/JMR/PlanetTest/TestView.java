@@ -47,7 +47,9 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		private Background theBackground;
 		private Planet somePlanets[];
+		private Planet someStars[];
 		private int numPlanets;
+		private int numStars;
 		private GameState state;
 		
 		public TestThread(SurfaceHolder holder, Context context, Handler handler){
@@ -58,6 +60,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			mHolder = holder;
 			mContext = context;
 			numPlanets = (int)(Math.random()*20);
+			numStars = (int)(Math.random()*5)+2;
 			
 			state = GameState.getInstance();
 			theBackground = new Background(state.gameCanvas);
@@ -77,6 +80,24 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 						state.gameMap.getWidth());
 				
 				somePlanets[i].setBounds(new Rect((int)(rectCX - (size/2.0)), (int)(rectCY - (size/2.0)),
+										(int)(rectCX + (size/2.0)), (int)(rectCY + (size/2.0))));
+			}
+			
+			// Create some stars:
+			someStars = new Planet[numStars];
+			for (int i = 0; i < numStars; i++)
+			{
+				someStars[i] = new Star((int)(Math.random()*100)/25);
+				
+				// Make some random center:
+				rectCX = (int) (Math.random()*state.gameMap.getWidth());
+				rectCY = (int) (Math.random()*state.gameMap.getHeight());
+				
+				// Make some random size:
+				size = (int) ((Math.random()*PLANET_SIZE_JITTER-(PLANET_SIZE_JITTER/2.0)+MEAN_PLANET_SIZE*2.)*
+						state.gameMap.getWidth());
+				
+				someStars[i].setBounds(new Rect((int)(rectCX - (size/2.0)), (int)(rectCY - (size/2.0)),
 										(int)(rectCX + (size/2.0)), (int)(rectCY + (size/2.0))));
 			}
 		}
@@ -116,6 +137,10 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 				for (int i = 0; i < numPlanets; i++)
 				{
 					somePlanets[i].draw(state.gameCanvas);
+				}
+				for (int i = 0; i < numStars; i++)
+				{
+					someStars[i].draw(state.gameCanvas);
 				}
 				
 				// Draw the bitmap from the game canvas to the screen surface, with the transform matrix:
