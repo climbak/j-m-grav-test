@@ -26,4 +26,8 @@ public class GameState {
 	public Canvas gameCanvas;
 	public Bitmap gameMap;
 	public float scale;
+	
+	public void flip() {
+		gameCanvas.rotate(90.f, gameCanvas.getWidth()/2.f, gameCanvas.getHeight()/2.f);
+	}
 }

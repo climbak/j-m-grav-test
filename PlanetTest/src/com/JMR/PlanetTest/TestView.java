@@ -44,6 +44,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		private Context mContext;
 		private Handler mHandler;
 		public boolean running = true;
+		private int landscape;
 		
 		private Background theBackground;
 		private Planet somePlanets[];
@@ -55,6 +56,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		public TestThread(SurfaceHolder holder, Context context, Handler handler){
 			int rectCX,rectCY;
 			int size;
+			landscape = -1;
 			
 			mHandler = handler;
 			mHolder = holder;
@@ -122,7 +124,19 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		private void doDraw(Canvas c) {
+			// Get a copy of the canvas, for screen dimension stuff:
 			if (myCanvas == null) myCanvas = c;
+			
+			// Make sure we orient the game board properly:
+			if (landscape == -1 && c != null) {
+				if (c.getWidth() > c.getHeight()) {
+					landscape = 1;
+					state.flip();
+				}
+				else landscape = 0;
+			}
+			
+			// Make sure not to try drawing to a canvas should we be called before we get one:
 			if (c != null) {
 				// Draw background to game canvas:
 				if (theBackground == null){
