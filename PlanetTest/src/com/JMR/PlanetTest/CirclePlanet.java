@@ -22,29 +22,55 @@ import android.util.Log;
 
 public class CirclePlanet extends BoardObject {
 
+	private enum PlanetType {
+		Earth,
+		Orange,
+		Ice		
+	}
+	
+	private PlanetType Type = PlanetType.Earth;
 	private Bitmap texture;
 	
 	public CirclePlanet()
 	{
-
+		Type = PlanetType.values()[new Random().nextInt(3)];
+	}
+	
+	private float parm_land_mass_pnt_percent;
+	private int parm_ocean_color;
+	private int parm_base_land_color;
+	private int[][] parm_shade_colors;
+	
+	private void setPlanetParms(){
+		switch (Type){
+		case Earth:
+			parm_land_mass_pnt_percent = .07f;
+			parm_ocean_color = Color.BLUE;
+			parm_base_land_color = Color.argb(255, 83, 105, 59);
+			parm_shade_colors = new int[][]{{118, 99, 67}, {64, 75, 41}};
+			break;
+		case Ice:
+			parm_land_mass_pnt_percent = .1f;
+			parm_ocean_color = Color.BLUE;
+			parm_base_land_color = Color.WHITE;
+			parm_shade_colors = new int[][]{{200, 200, 200}};
+			break;
+		case Orange:
+			parm_ocean_color = Color.RED;
+			parm_land_mass_pnt_percent = .2f;
+			parm_base_land_color = Color.RED;
+			parm_shade_colors = new int[][]{{200, 200, 200}};
+			break;
+		}
 	}
 	
 	public void Create(){
 		
-		
-		this.setDither(true);
-		/*
-
-		int start_cnt = 30;
-		int width = 200;
-		int height = 200;
-		int rmin = 20;
-		int rjitter = 10;
-		*/
+		setPlanetParms();
 		
 		Random rand = new Random();
 		
-		int start_cnt = (int)(this.radius * .07);
+		int start_cnt = (int)(this.radius * parm_land_mass_pnt_percent);
 		int width = this.radius;
 		int rmin = 20;
 		int rjitter = 10;
@@ -62,14 +88,16 @@ public class CirclePlanet extends BoardObject {
 		Path halo_circle = new Path();
 		halo_circle.addCircle(width/2, width/2, width/2, Direction.CCW);
 		p.setARGB(50, 40, 100, 255);
+		
 		can.drawPath(halo_circle, p);
 		
 		can.clipPath(path_circle);
 		
-		p.setColor(Color.BLUE);
+		p.setColor(parm_ocean_color);
 		can.drawRect(0,0,width,width, p);
 
 		p.setARGB(255, 102, 124, 38);
+		
 		p.setShader(getGroundBumpmap());
 		p.setPathEffect(new CornerPathEffect(10f));
 		
@@ -146,17 +174,17 @@ public class CirclePlanet extends BoardObject {
 		Random rand = new Random();
 		Paint p = new Paint();
 		
-		int [][] colors = {{118, 99, 67}, {64, 75, 41}};
+		int [][] colors = parm_shade_colors;
 
-		
 		// p.setARGB(255, 102, 124, 38);
-		p.setARGB(255, 83,105,59);
+		p.setColor(parm_base_land_color);
+		
 		c.drawRect(0,0, width, width, p);
 		p.setPathEffect(new CornerPathEffect(10f));
 		
 		for (int col=0;col<colors.length;col++){
 			
-			p.setColor(Color.argb(150, colors[col][0], colors[col][1], colors[col][2]));
+			p.setColor(Color.argb(130, colors[col][0], colors[col][1], colors[col][2]));
 			p.setShader(getGroundBumpmap(colors[col][0], colors[col][1], colors[col][2], 0));
 			
 			for (int i=0;i<start_cnt;i++){
