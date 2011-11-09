@@ -35,7 +35,10 @@ public class CirclePlanet extends BoardObject {
 		
 		myPaint.setARGB(255, 180, 0, 0);
 		
-		canvas.drawCircle(myRect.exactCenterX(), myRect.exactCenterY(), radius, myPaint);
+		canvas.drawCircle(
+				10, 
+				10, 30, 
+				myPaint);
 	}
 
 	@Override

@@ -101,6 +101,9 @@ public class GameState extends Drawable implements Animatable {
 		if (canvas != null)
 		{
 			boardBackground.draw(gameCanvas);
+			for (BoardObject bobj : boardObjects){
+				bobj.draw(canvas);
+			}
 		}
 		
 		canvas.drawBitmap(gameMap, new Matrix(), null);
