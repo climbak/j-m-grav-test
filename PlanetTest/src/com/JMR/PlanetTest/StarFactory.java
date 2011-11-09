@@ -3,6 +3,7 @@ package com.JMR.PlanetTest;
 import java.util.Iterator;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 public class StarFactory {
 	public static final int MEAN_RADIUS = 70;

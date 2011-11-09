@@ -71,7 +71,7 @@ public class Star extends BoardObject {
 			}
 	
 			canvas.drawCircle(myRect.exactCenterX(), myRect.exactCenterY(), 
-					radius*.66f+(radius*.33f/Star.NUM_LAYERS*(i+1)), myPaint);
+					radius*.65f+(radius*.33f/Star.NUM_LAYERS*(i+1)), myPaint);
 		}
 		
 	}
