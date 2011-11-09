@@ -71,7 +71,7 @@ public class CirclePlanet extends BoardObject {
 		Random rand = new Random();
 		
 		int start_cnt = (int)(this.radius * parm_land_mass_pnt_percent);
-		int width = this.radius;
+		int width = this.radius*2;
 		int rmin = 20;
 		int rjitter = 10;
 		
@@ -348,7 +348,9 @@ public class CirclePlanet extends BoardObject {
 	public void draw(Canvas canvas) {
 		Paint myPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		
-		canvas.drawBitmap(texture, this.getBounds().exactCenterX(), this.getBounds().exactCenterY(), myPaint);
+		//Log.d("CirclePlanet.draw", "");
+		
+		canvas.drawBitmap(texture, myRect.exactCenterX(), myRect.exactCenterY(), myPaint);
 		
 		/*
 		canvas.drawCircle(

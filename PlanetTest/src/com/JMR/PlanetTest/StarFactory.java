@@ -6,8 +6,8 @@ import android.graphics.Rect;
 import android.util.Log;
 
 public class StarFactory {
-	public static final int MEAN_RADIUS = 70;
-	public static final int RADIUS_JITTER = 25;
+	public static final int MEAN_RADIUS = 50;
+	public static final int RADIUS_JITTER = 10;
 	
 	public static Star getRandomStar() {
 		// Create the star with a random type:
@@ -24,7 +24,7 @@ public class StarFactory {
 		while (keepTrying)
 		{
 			// Calculate a random radius:
-			radius = (int) (Math.random()*MEAN_RADIUS + (Math.random()*RADIUS_JITTER*2)-RADIUS_JITTER);
+			radius = (int) (MEAN_RADIUS + (Math.random()*RADIUS_JITTER*2)-RADIUS_JITTER);
 			
 			// Calculate a random centerpoint:
 			centerX = (int) (GameState.getInstance().gameCanvas.getWidth()*Math.random());
@@ -38,7 +38,7 @@ public class StarFactory {
 				testObj = (BoardObject)list.next();
 				if (Math.sqrt((testObj.getBounds().centerX()-centerX)*(testObj.getBounds().centerX()-centerX)+
 						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<
-						(testObj.radius+radius))
+						(testObj.radius+radius)*2)
 				{
 					keepTrying = true;
 					break;

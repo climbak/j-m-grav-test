@@ -26,7 +26,7 @@ public class BlackHoleFactory {
 		while (keepTrying)
 		{
 			// Calculate a random radius:
-			radius = (int) (Math.random()*MEAN_RADIUS + (Math.random()*RADIUS_JITTER*2)-RADIUS_JITTER);
+			radius = (int) (MEAN_RADIUS + (Math.random()*RADIUS_JITTER*2)-RADIUS_JITTER);
 			
 			// Calculate a random centerpoint:
 			centerX = (int) (GameState.getInstance().gameCanvas.getWidth()*Math.random());
@@ -40,7 +40,7 @@ public class BlackHoleFactory {
 				testObj = (BoardObject)list.next();
 				if (Math.sqrt((testObj.getBounds().centerX()-centerX)*(testObj.getBounds().centerX()-centerX)+
 						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<=
-						(testObj.radius+radius))
+						(testObj.radius+radius)*2)
 				{
 					keepTrying = true;
 					break;

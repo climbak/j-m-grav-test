@@ -52,7 +52,7 @@ public class BlackHole extends BoardObject {
 		
 		// Draw the black center:
 		myPaint.setARGB(255, 0, 0, 0);
-		canvas.drawCircle(centerX, centerY, radius*.95f, myPaint);
+		canvas.drawCircle(centerX, centerY, radius*.9f, myPaint);
 	}
 
 	@Override

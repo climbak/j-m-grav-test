@@ -31,7 +31,7 @@ public abstract class BoardObject extends Drawable implements Animatable {
 	@Override
 	public void setBounds(Rect bounds) {
 		myRect = bounds;
-		radius = Math.min(bounds.height(), bounds.width());
+		radius = Math.min(bounds.height(), bounds.width())/2;
 	}
 	
 	/*

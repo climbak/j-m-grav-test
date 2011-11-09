@@ -57,6 +57,11 @@ public class GameState extends Drawable implements Animatable {
 			player1Base = new Base(width, height/2);
 			player2Base = new Base(0, height/2);
 		}
+		else
+		{
+			player1Base = new Base(width/2, height);
+			player2Base = new Base(width/2, 0);
+		}
 		
 		this.setDither(true);
 	}
