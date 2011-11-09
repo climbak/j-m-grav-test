@@ -79,7 +79,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 						
 			// Make sure not to try drawing to a canvas should we be called before we get one:
 			if (c != null) {
-				if (theGame.gameCanvas == null) theGame.createBoard(c.getWidth(), c.getHeight(), 15, 5, 0);
+				if (theGame.gameCanvas == null) theGame.createBoard(c.getWidth(), c.getHeight(), 2, 2, 5);
 				theGame.draw(c);
 			}
 		}

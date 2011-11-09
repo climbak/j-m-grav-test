@@ -1,21 +1,49 @@
 package com.JMR.PlanetTest;
 
+import java.util.Iterator;
+
 import android.graphics.Rect;
 
 public class StarFactory {
-	public static final int MEAN_RADIUS = 20;
-	public static final int RADIUS_JITTER = 5;
+	public static final int MEAN_RADIUS = 70;
+	public static final int RADIUS_JITTER = 25;
 	
 	public static Star getRandomStar() {
 		// Create the star with a random type:
 		int type = ((int)(Math.random()*500)%4);
 		
-		// Calculate a random radius:
-		int radius = (int) (Math.random()*MEAN_RADIUS + (Math.random()*RADIUS_JITTER*2)-RADIUS_JITTER);
+		int radius = 0;
+		int centerX = 0;
+		int centerY = 0;
+		boolean keepTrying = true;
+		Iterator list;
+		BoardObject testObj;
 		
-		// Calculate a random centerpoint:
-		int centerX = (int) (GameState.getInstance().gameCanvas.getWidth()*Math.random());
-		int centerY = (int) (GameState.getInstance().gameCanvas.getHeight()*Math.random());		
+		// Keep coming up with centers and radii until we don't collide with anything:
+		while (keepTrying)
+		{
+			// Calculate a random radius:
+			radius = (int) (Math.random()*MEAN_RADIUS + (Math.random()*RADIUS_JITTER*2)-RADIUS_JITTER);
+			
+			// Calculate a random centerpoint:
+			centerX = (int) (GameState.getInstance().gameCanvas.getWidth()*Math.random());
+			centerY = (int) (GameState.getInstance().gameCanvas.getHeight()*Math.random());
+			
+			keepTrying = false;
+			
+			list = GameState.getInstance().boardObjects.iterator();
+			while(list.hasNext())
+			{
+				testObj = (BoardObject)list.next();
+				if (Math.sqrt((testObj.getBounds().centerX()-centerX)*(testObj.getBounds().centerX()-centerX)+
+						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<
+						(testObj.radius+radius))
+				{
+					keepTrying = true;
+					break;
+				}
+			}
+		}		
 		
 		return getStar(type,centerX,centerY,radius);
 	}
