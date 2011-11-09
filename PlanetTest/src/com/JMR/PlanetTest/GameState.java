@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -99,8 +100,10 @@ public class GameState extends Drawable implements Animatable {
 		// TODO Auto-generated method stub
 		if (canvas != null)
 		{
-			boardBackground.draw(canvas);
+			boardBackground.draw(gameCanvas);
 		}
+		
+		canvas.drawBitmap(gameMap, new Matrix(), null);
 	}
 
 	@Override

@@ -141,6 +141,17 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		float deltaDist = (float) (dist2-dist1);
 		float ratio = deltaDist/dist1;
+		
+		if (ratio * state.gameCanvas.getHeight() < myCanvas.getHeight())
+		{
+			Log.d("TestView.doZoom", new Integer(myCanvas.getHeight()).toString());
+			ratio = state.gameCanvas.getHeight()/myCanvas.getHeight();
+		}
+		if (ratio * state.gameCanvas.getWidth() < myCanvas.getWidth())
+		{
+			ratio = state.gameCanvas.getWidth()/myCanvas.getWidth();
+		}
+		
 		state.gameCanvas.scale(1.0f-ratio, 1.0f-ratio, (x1+x2)/2, (y1+y2)/2);
 	}
 
