@@ -142,17 +142,55 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		float deltaDist = (float) (dist2-dist1);
 		float ratio = deltaDist/dist1;
 		
-		if (ratio * state.gameCanvas.getHeight() < myCanvas.getHeight())
+		// Get the apparent width and height of the canvas:
+		float workingHeight = state.gameCanvas.getMatrix().mapRadius(state.gameCanvas.getHeight());
+		float workingWidth = state.gameCanvas.getMatrix().mapRadius(state.gameCanvas.getWidth());
+		
+		// See if the scale will make us smaller than the screen:
+		if ((1.0f-ratio) * workingHeight <= myCanvas.getHeight())
 		{
-			Log.d("TestView.doZoom", new Integer(myCanvas.getHeight()).toString());
-			ratio = state.gameCanvas.getHeight()/myCanvas.getHeight();
+			state.gameCanvas.setMatrix(new Matrix());
+			return;
 		}
-		if (ratio * state.gameCanvas.getWidth() < myCanvas.getWidth())
+		if ((1.0f-ratio) * workingWidth <= myCanvas.getWidth())
 		{
-			ratio = state.gameCanvas.getWidth()/myCanvas.getWidth();
+			state.gameCanvas.setMatrix(new Matrix());
+			return;
 		}
 		
+		// Do the scale
 		state.gameCanvas.scale(1.0f-ratio, 1.0f-ratio, (x1+x2)/2, (y1+y2)/2);
+		
+		// Check to see if we're off the side:
+		Matrix currMat = state.gameCanvas.getMatrix();
+		
+		float[] points = new float[4];
+		points[0] = 0.0f;	// Top left
+		points[1] = 0.0f;
+	 
+		points[2] = state.gameCanvas.getWidth(); // Bottom right
+		points[3] = state.gameCanvas.getHeight();
+		
+		currMat.mapPoints(points);
+		
+		// Check to see if we've scrolled our bitmap outside the screen rect:
+		if (points[0] > 0.0f)
+		{
+			state.gameCanvas.translate(-points[0], 0.0f);
+		}
+		else if (points[2] < myCanvas.getWidth())
+		{
+			state.gameCanvas.translate(myCanvas.getWidth()-points[2], 0.0f);
+		}
+		
+		if (points[1] > 0.0f)
+		{
+			state.gameCanvas.translate(0.0f, -points[1]);
+		}
+		else if (points[3] < myCanvas.getHeight())
+		{
+			state.gameCanvas.translate(0.0f, myCanvas.getHeight()-points[3]);
+		}
 	}
 
 	private void doTranslate(float x, float historicalX, float y,
