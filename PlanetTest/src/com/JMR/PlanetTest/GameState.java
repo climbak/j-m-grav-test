@@ -10,8 +10,10 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 
 public class GameState extends Drawable implements Animatable {
-	//public static final int BOARD_WIDTH = 1080;
-	//public static final int BOARD_HEIGHT = 1920;
+	public static final int STATE_PLAYER1_TURN = 1;
+	public static final int STATE_PLAYER2_TURN = 2;
+	public static final int STATE_SIMULATING = 0;
+	public static final int STATE_GAME_OVER = -1;
 	
 	public static GameState instance;
 	
@@ -22,9 +24,6 @@ public class GameState extends Drawable implements Animatable {
 	}
 	
 	private GameState(){
-		// Create the game map:
-		//gameMap = Bitmap.createBitmap(BOARD_WIDTH, BOARD_HEIGHT, Bitmap.Config.ARGB_8888);
-		//gameCanvas = new Canvas(gameMap);
 		landscape = false;
 		turn = -1;
 	}
@@ -98,7 +97,10 @@ public class GameState extends Drawable implements Animatable {
 	@Override
 	public void draw(Canvas canvas) {
 		// TODO Auto-generated method stub
-		
+		if (canvas != null)
+		{
+			boardBackground.draw(canvas);
+		}
 	}
 
 	@Override

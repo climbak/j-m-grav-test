@@ -1,12 +1,14 @@
 package com.JMR.PlanetTest;
 
+import java.util.Random;
+
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 public class Background extends Drawable {
-	public static final int NUM_STARS = 1000;
+	public static final int NUM_STARS = 3000;
 	
 	public static final float YELLOW_PERCENT = 0.33f;
 	public static final float WHITE_PERCENT = 0.33f;
@@ -67,22 +69,34 @@ public class Background extends Drawable {
 	public void draw(Canvas canvas) {
 		// Fill black:
 		canvas.drawRGB(0, 0, 0);
-				
+		
 		// Red Stars:
-		p.setARGB(255, Background.RED_RGB[0], Background.RED_RGB[1], Background.RED_RGB[2]);
-		canvas.drawPoints(redStars, p);
+		for (int i = 0; i < Background.NUM_RED*2; i+=2)
+		{
+			p.setARGB(i % 256, Background.RED_RGB[0], Background.RED_RGB[1], Background.RED_RGB[2]);
+			canvas.drawPoint(redStars[i],redStars[i+1], p);
+		}
 		
 		// Yellow Stars:
-		p.setARGB(255, Background.YELLOW_RGB[0], Background.YELLOW_RGB[1], Background.YELLOW_RGB[2]);
-		canvas.drawPoints(yellowStars, p);
+		for (int i = 0; i < Background.NUM_YELLOW*2; i+=2)
+		{
+			p.setARGB(i % 256, Background.YELLOW_RGB[0], Background.YELLOW_RGB[1], Background.YELLOW_RGB[2]);
+			canvas.drawPoint(yellowStars[i],yellowStars[i+1], p);
+		}
 		
 		// White Stars:
-		p.setARGB(255, Background.WHITE_RGB[0], Background.WHITE_RGB[1], Background.WHITE_RGB[2]);
-		canvas.drawPoints(whiteStars, p);
+		for (int i = 0; i < Background.NUM_WHITE*2; i+=2)
+		{
+			p.setARGB(i % 256, Background.WHITE_RGB[0], Background.WHITE_RGB[1], Background.WHITE_RGB[2]);
+			canvas.drawPoint(whiteStars[i],whiteStars[i+1], p);
+		}
 		
 		// Blue Stars:
-		p.setARGB(255, Background.BLUE_RGB[0], Background.BLUE_RGB[1], Background.BLUE_RGB[2]);
-		canvas.drawPoints(blueStars, p);
+		for (int i = 0; i < Background.NUM_BLUE*2; i+=2)
+		{
+			p.setARGB(i % 256, Background.BLUE_RGB[0], Background.BLUE_RGB[1], Background.BLUE_RGB[2]);
+			canvas.drawPoint(blueStars[i],blueStars[i+1], p);
+		}
 	}
 
 	@Override
