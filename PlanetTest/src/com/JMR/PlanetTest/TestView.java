@@ -42,6 +42,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		private Context mContext;
 		private Handler mHandler;
 		public boolean running = true;
+		public long prevTime;
 		
 		private GameState theGame;
 		
@@ -62,7 +63,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					c = mHolder.lockCanvas(null);
 					synchronized (mHolder) {
 						// doLogic()
-						// doPhysics()
+						doPhysics();
 						doDraw(c);
 					}
 				} finally {
@@ -71,6 +72,18 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					}
 				}
 			}
+		}
+		
+		private void doPhysics() {
+			// Setup timestep:
+			long currTime = System.currentTimeMillis();
+			long deltaT = currTime - prevTime;
+			
+			// Do simulation:
+			
+			
+			// Flip current time into prevTime:
+			prevTime = currTime;
 		}
 
 		private void doDraw(Canvas c) {
