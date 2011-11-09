@@ -41,6 +41,7 @@ public class StarFactory {
 				deltaY = testObj.getBounds().centerY()-centerY;
 				radSum = testObj.radius+radius;
 				if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= radSum * 2)
+				{
 					Log.d("StarFactory.getRandomStar", "Collision!");
 					keepTrying = true;
 					break;
