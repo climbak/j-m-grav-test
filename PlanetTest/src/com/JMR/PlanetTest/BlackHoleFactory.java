@@ -42,6 +42,7 @@ public class BlackHoleFactory {
 						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<=
 						(testObj.radius+radius)*2)
 				{
+					Log.d("BlackHoleFactory.getRandomBlackHole", "Collision!");
 					keepTrying = true;
 					break;
 				}

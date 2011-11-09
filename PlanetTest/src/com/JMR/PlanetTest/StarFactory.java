@@ -40,6 +40,7 @@ public class StarFactory {
 						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<
 						(testObj.radius+radius)*2)
 				{
+					Log.d("StarFactory.getRandomStar", "Collision!");
 					keepTrying = true;
 					break;
 				}

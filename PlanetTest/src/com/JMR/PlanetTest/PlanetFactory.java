@@ -43,6 +43,7 @@ public class PlanetFactory {
 						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<
 						(testObj.radius+radius)*2)
 				{
+					Log.d("PlanetFactory.getRandomPlanet", "Collision!");
 					keepTrying = true;
 					break;
 				}
