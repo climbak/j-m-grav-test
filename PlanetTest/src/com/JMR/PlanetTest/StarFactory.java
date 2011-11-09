@@ -16,6 +16,7 @@ public class StarFactory {
 		int radius = 0;
 		int centerX = 0;
 		int centerY = 0;
+		int deltaX, deltaY, radSum;
 		boolean keepTrying = true;
 		Iterator list;
 		BoardObject testObj;
@@ -36,10 +37,10 @@ public class StarFactory {
 			while(list.hasNext())
 			{
 				testObj = (BoardObject)list.next();
-				if (Math.sqrt((testObj.getBounds().centerX()-centerX)*(testObj.getBounds().centerX()-centerX)+
-						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<
-						(testObj.radius+radius)*2)
-				{
+				deltaX = testObj.getBounds().centerX()-centerX;
+				deltaY = testObj.getBounds().centerY()-centerY;
+				radSum = testObj.radius+radius;
+				if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= radSum * 2)
 					Log.d("StarFactory.getRandomStar", "Collision!");
 					keepTrying = true;
 					break;

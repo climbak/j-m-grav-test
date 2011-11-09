@@ -16,6 +16,7 @@ public class PlanetFactory {
 		int radius = 0;
 		int centerX = 0;
 		int centerY = 0;
+		int deltaX, deltaY, radSum;
 		boolean keepTrying = true;
 		Iterator list;
 		BoardObject testObj;
@@ -29,19 +30,17 @@ public class PlanetFactory {
 			// Calculate a random centerpoint:
 			centerX = (int) (GameState.getInstance().gameCanvas.getWidth()*Math.random());
 			centerY = (int) (GameState.getInstance().gameCanvas.getHeight()*Math.random());
-			
-			Log.d("LOOOOK HHHHEEEERRRRE", new Integer(centerX).toString());
-			Log.d("LOOOOK HHHHEEEERRRRE", new Integer(centerY).toString());
-			
+						
 			keepTrying = false;
 			
 			list = GameState.getInstance().boardObjects.iterator();
 			while(list.hasNext())
 			{
 				testObj = (BoardObject)list.next();
-				if (Math.sqrt((testObj.getBounds().centerX()-centerX)*(testObj.getBounds().centerX()-centerX)+
-						(testObj.getBounds().centerY()-centerY)*(testObj.getBounds().centerY()-centerY))<
-						(testObj.radius+radius)*2)
+				deltaX = testObj.getBounds().centerX()-centerX;
+				deltaY = testObj.getBounds().centerY()-centerY;
+				radSum = testObj.radius+radius;
+				if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= radSum * 2)
 				{
 					Log.d("PlanetFactory.getRandomPlanet", "Collision!");
 					keepTrying = true;
