@@ -8,10 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.MaskFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
 import android.graphics.Bitmap.Config;
+import android.graphics.Path.Direction;
+import android.graphics.Shader.TileMode;
 import android.util.Log;
 
 public class CirclePlanet extends BoardObject {
@@ -20,23 +24,53 @@ public class CirclePlanet extends BoardObject {
 	
 	public CirclePlanet()
 	{
-		int start_cnt = 6;
+
+	}
+	
+	public void Create(){
+		
+		
+		this.setDither(true);
+		/*
+
+		int start_cnt = 30;
 		int width = 200;
 		int height = 200;
-		int rmin = 50;
-		int rjitter = 20;
+		int rmin = 20;
+		int rjitter = 10;
+		*/
 		
-		texture = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		int start_cnt = radius / 19;
+		int width = this.radius;
+		int rmin = 20;
+		int rjitter = 10;
+		
+		texture = Bitmap.createBitmap(width, width, Config.ARGB_8888);
 		Canvas can = new Canvas(texture);
 		Random rand = new Random();
 		
+		Path path_circle = new Path();
+		path_circle.addCircle(width/2, width/2, width/2.10f, Direction.CCW);
 		Paint p = new Paint();
 		
+		p.setAntiAlias(true);
+		
+		Path halo_circle = new Path();
+		halo_circle.addCircle(width/2, width/2, width/2, Direction.CCW);
+		p.setARGB(50, 40, 100, 255);
+		can.drawPath(halo_circle, p);
+		
+		can.clipPath(path_circle);
+		
+		p.setColor(Color.DKGRAY);
+		can.drawRect(0,0,width,width, p);
+
 		p.setColor(Color.BLUE);
-				
+		
+		
 		for (int i=0;i<start_cnt;i++){
 			int x = rand.nextInt(width);
-			int y = rand.nextInt(height);
+			int y = rand.nextInt(width);
 			
 			Path path = new Path();
 			
@@ -80,6 +114,18 @@ public class CirclePlanet extends BoardObject {
 			
 			can.drawPath(path, p);
 		}
+		
+		Path path_shadow = new Path();
+		path_shadow.addCircle(width/2 - 20, width/2 - 20, width/2, Direction.CCW);
+		
+		int left = Color.argb(0, 0, 0, 0);
+		int right = Color.argb(200, 0, 0, 0);
+		
+		
+		Paint p2 = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+		RadialGradient rg = new RadialGradient((float)(width/2 - 20), (float)(width/2 ), (float)(width/1.5), new int[]{left, left, right}, null, TileMode.CLAMP);
+		p2.setShader(rg);
+		can.drawPath(path_circle, p2);
 	}
 	
 	@Override
@@ -109,11 +155,7 @@ public class CirclePlanet extends BoardObject {
 	public void draw(Canvas canvas) {
 		Paint myPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		
-		myPaint.setARGB(255, 100, 100, 100);
-
-		canvas.drawRect(100,100,300,300, myPaint);
-
-		canvas.drawBitmap(texture, 100, 100, myPaint);
+		canvas.drawBitmap(texture, this.getBounds().exactCenterX(), this.getBounds().exactCenterY(), myPaint);
 		
 		/*
 		canvas.drawCircle(

@@ -57,6 +57,8 @@ public class GameState extends Drawable implements Animatable {
 			player1Base = new Base(width, height/2);
 			player2Base = new Base(0, height/2);
 		}
+		
+		this.setDither(true);
 	}
 	
 	public void createBoard(int width, int height, int numPlanets, int numStars, int numBlackHoles) {

@@ -1,6 +1,7 @@
 package com.JMR.PlanetTest;
 
 import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -20,6 +21,9 @@ public class PlanetTestActivity extends Activity {
         /* DEBUG */
         Log.d("PlanetTestActivity", "Beginning activity creation.");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+        Window window = getWindow();
+        window.setFormat(PixelFormat.RGBA_8888);
         
         Log.d("PlanetTestActivity", "Setting Content View");
         setContentView(R.layout.main);
