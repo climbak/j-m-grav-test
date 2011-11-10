@@ -116,8 +116,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					currObject = (BoardObject)gravityObjects.next();
 					
 					// Get a vector from the projectile to the current object:
-					vecX = -(currObject.getBounds().exactCenterX() - theProjectile.x);
-					vecY = -(currObject.getBounds().exactCenterY() - theProjectile.y);
+					vecX = (currObject.getBounds().exactCenterX() - theProjectile.x);
+					vecY = (currObject.getBounds().exactCenterY() - theProjectile.y);
 					
 					// Calculate the magnitude of the vector:
 					dist = Math.sqrt(vecX*vecX + vecY*vecY);
@@ -131,8 +131,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					vecY /= dist / dist;
 					
 					// Fudge factor (It's a game, doesn't have to be physically accurate)
-					vecX *= 2.;
-					vecY *= 2.;
+					vecX *= 10.;
+					vecY *= 10.;
 					
 					// Now multiply by the objects intrinsic acceleration:
 					ax += vecX * currObject.g;
