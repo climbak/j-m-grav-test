@@ -40,6 +40,7 @@ public class GameState extends Drawable implements Animatable {
 	public int player2Score;
 	public Background boardBackground;
 	public int turn;
+	public Projectile projectile;
 	
 	public void flip() {  // TODO This is a horrible way to handle this, need to change.
 		gameCanvas.rotate(90.f, gameCanvas.getWidth()/2.f, gameCanvas.getHeight()/2.f);

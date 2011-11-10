@@ -79,9 +79,13 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			long currTime = System.currentTimeMillis();
 			long deltaT = currTime - prevTime;
 			
-			// Do simulation:
+			// Is there anything to simulate?:
+			if (theGame.projectile != null)
+			{		
+				// Do simulation:
 			
 			
+			}
 			// Flip current time into prevTime:
 			prevTime = currTime;
 		}
