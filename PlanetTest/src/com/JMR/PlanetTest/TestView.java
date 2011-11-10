@@ -1,5 +1,7 @@
 package com.JMR.PlanetTest;
 
+import java.util.Iterator;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -81,9 +83,16 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			
 			// Is there anything to simulate?:
 			if (theGame.projectile != null)
-			{		
+			{	
+				// Create some stuff to do the sim:
+				float ax, ay; // Accumulated accelerations
+				Projectile theProjectile;
+				Iterator gravityObjects;
+				
 				// Do simulation:
-			
+				theProjectile = theGame.projectile;
+				
+				
 			
 			}
 			// Flip current time into prevTime:
