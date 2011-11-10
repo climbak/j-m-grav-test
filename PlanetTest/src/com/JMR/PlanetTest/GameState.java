@@ -111,11 +111,13 @@ public class GameState extends Drawable implements Animatable {
 			boardBackground.invalidateSelf();
 			boardBackground.draw(gameCanvas);
 			
+			if (projectile != null) projectile.draw(gameCanvas);
+			
 			for (BoardObject bobj : boardObjects){
 				bobj.draw(gameCanvas);
 			}
 		}
-		if (projectile != null) projectile.draw(gameCanvas);
+		
 		canvas.drawBitmap(gameMap, new Matrix(), null);
 	}
 

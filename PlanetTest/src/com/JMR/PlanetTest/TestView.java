@@ -68,8 +68,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 
 					theGame.projectile = new Projectile((float)(Math.random()*theGame.gameCanvas.getWidth()),
 							(float)(Math.random()*theGame.gameCanvas.getHeight()),
-							(float)(Math.random()*35),
-							(float)(Math.random()*35));
+							(float)(Math.random()*15),
+							(float)(Math.random()*15));
 				
 				}
 				try {
@@ -127,8 +127,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					vecY /= dist;
 					
 					// Divide twice more, because the acceleration should drop by the square of the distance:
-					vecX /= dist; // dist;
-					vecY /= dist; // dist;
+					vecX /= dist / dist;
+					vecY /= dist / dist;
 					
 					// Now multiply by the objects intrinsic acceleration:
 					ax += vecX * currObject.g;

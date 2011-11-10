@@ -29,7 +29,7 @@ public class Projectile extends Drawable implements Animatable {
 		Paint myPaint = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.DITHER_FLAG);
 		myPaint.setARGB(255,255,255,255);
 		
-		canvas.drawCircle(x, y, 10, myPaint);
+		canvas.drawCircle(x, y, 5, myPaint);
 	}
 
 	@Override
