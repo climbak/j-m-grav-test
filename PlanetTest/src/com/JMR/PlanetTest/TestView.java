@@ -68,8 +68,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 
 					theGame.projectile = new Projectile((float)(Math.random()*theGame.gameCanvas.getWidth()),
 							(float)(Math.random()*theGame.gameCanvas.getHeight()),
-							(float)(Math.random()*15),
-							(float)(Math.random()*15));
+							(float)(Math.random()*5),
+							(float)(Math.random()*5));
 				
 				}
 				try {
@@ -116,8 +116,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					currObject = (BoardObject)gravityObjects.next();
 					
 					// Get a vector from the projectile to the current object:
-					vecX = (currObject.getBounds().exactCenterX() - theProjectile.x);
-					vecY = (currObject.getBounds().exactCenterY() - theProjectile.y);
+					vecX = -(currObject.getBounds().exactCenterX() - theProjectile.x);
+					vecY = -(currObject.getBounds().exactCenterY() - theProjectile.y);
 					
 					// Calculate the magnitude of the vector:
 					dist = Math.sqrt(vecX*vecX + vecY*vecY);
@@ -138,10 +138,6 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 				// Now update the projectile's position:
 				theProjectile.x += theProjectile.vx*workingT + 0.5*ax*workingT*workingT;
 				theProjectile.y += theProjectile.vy*workingT + 0.5*ay*workingT*workingT;
-								
-				// Update the projectile's velocity:
-				theProjectile.vx += ax*workingT;
-				theProjectile.vy += ay*workingT;
 				
 				// Do some collision stuff:
 				if (theProjectile.x < 0 || theProjectile.y < 0 ||
