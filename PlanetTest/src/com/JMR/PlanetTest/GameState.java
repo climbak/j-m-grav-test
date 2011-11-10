@@ -108,13 +108,14 @@ public class GameState extends Drawable implements Animatable {
 		// TODO Auto-generated method stub
 		if (canvas != null)
 		{
+			boardBackground.invalidateSelf();
 			boardBackground.draw(gameCanvas);
 			
 			for (BoardObject bobj : boardObjects){
 				bobj.draw(gameCanvas);
 			}
 		}
-		
+		if (projectile != null) projectile.draw(gameCanvas);
 		canvas.drawBitmap(gameMap, new Matrix(), null);
 	}
 

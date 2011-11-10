@@ -15,13 +15,15 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RadialGradient;
+import android.graphics.Rect;
 import android.graphics.Bitmap.Config;
 import android.graphics.Path.Direction;
 import android.graphics.Shader.TileMode;
 import android.util.Log;
 
 public class CirclePlanet extends BoardObject {
-
+	public static final float BASE_G = 20.f;
+	
 	private enum PlanetType {
 		Earth,
 		Orange,
@@ -335,6 +337,13 @@ public class CirclePlanet extends BoardObject {
 	@Override
 	public void stop() {
 		// Not animated, so ignore
+	}
+	
+	@Override
+	public void setBounds(Rect r)
+	{
+		super.setBounds(r);
+		g = (1.0f-(PlanetFactory.MEAN_RADIUS-radius))*BASE_G;
 	}
 
 	@Override

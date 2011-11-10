@@ -4,11 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
 public class BlackHole extends BoardObject {
-	public static final int NUM_ITER = 7;
+	public static final float BASE_G = 100.f;
 	
 	public BlackHole() {
 		super();
@@ -53,6 +54,13 @@ public class BlackHole extends BoardObject {
 		// Draw the black center:
 		myPaint.setARGB(255, 0, 0, 0);
 		canvas.drawCircle(centerX, centerY, radius*.9f, myPaint);
+	}
+	
+	@Override
+	public void setBounds(Rect r)
+	{
+		super.setBounds(r);
+		g = (1.0f-(BlackHoleFactory.MEAN_RADIUS-radius))*BASE_G;
 	}
 
 	@Override

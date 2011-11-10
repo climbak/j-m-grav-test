@@ -4,9 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 
 public class Star extends BoardObject {
+	
+	public static final float BASE_G = 50.f;
 	
 	public static final int RED = 0;
 	public static final int YELLOW = 1;
@@ -74,6 +77,13 @@ public class Star extends BoardObject {
 					radius*.65f+(radius*.33f/Star.NUM_LAYERS*(i+1)), myPaint);
 		}
 		
+	}
+	
+	@Override
+	public void setBounds(Rect r)
+	{
+		super.setBounds(r);
+		g = (1.0f-(StarFactory.MEAN_RADIUS-radius))*BASE_G;
 	}
 
 	@Override

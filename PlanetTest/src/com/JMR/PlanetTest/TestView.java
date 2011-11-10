@@ -59,8 +59,19 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		@Override
 		public void run() {
+			long t;
 			while (running) { // <<-- MAIN LOOP
 				Canvas c = null;
+				if (theGame.projectile == null && theGame.gameCanvas != null)
+				{
+					Log.d("TestView.run","SPAWNING PROJECTILE");
+
+					theGame.projectile = new Projectile((float)(Math.random()*theGame.gameCanvas.getWidth()),
+							(float)(Math.random()*theGame.gameCanvas.getHeight()),
+							(float)(Math.random()*35),
+							(float)(Math.random()*35));
+				
+				}
 				try {
 					c = mHolder.lockCanvas(null);
 					synchronized (mHolder) {
@@ -80,20 +91,72 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			// Setup timestep:
 			long currTime = System.currentTimeMillis();
 			long deltaT = currTime - prevTime;
+			double workingT = ((double)deltaT) / 1000.;
 			
 			// Is there anything to simulate?:
 			if (theGame.projectile != null)
 			{	
 				// Create some stuff to do the sim:
-				float ax, ay; // Accumulated accelerations
+				double ax, ay; // Accumulated accelerations
+				double vecX, vecY;
+				double dist;
 				Projectile theProjectile;
 				Iterator gravityObjects;
+				BoardObject currObject;
 				
 				// Do simulation:
+				ax = ay = 0;
 				theProjectile = theGame.projectile;
 				
+				gravityObjects = theGame.boardObjects.iterator();
 				
+				// Accumulate all accelerations:
+				while (gravityObjects.hasNext())
+				{
+					currObject = (BoardObject)gravityObjects.next();
+					
+					// Get a vector from the projectile to the current object:
+					vecX = (currObject.getBounds().exactCenterX() - theProjectile.x);
+					vecY = (currObject.getBounds().exactCenterY() - theProjectile.y);
+					
+					// Calculate the magnitude of the vector:
+					dist = Math.sqrt(vecX*vecX + vecY*vecY);
+					
+					// Normalize the vector:
+					vecX /= dist;
+					vecY /= dist;
+					
+					// Divide twice more, because the acceleration should drop by the square of the distance:
+					vecX /= dist; // dist;
+					vecY /= dist; // dist;
+					
+					// Now multiply by the objects intrinsic acceleration:
+					ax += vecX * currObject.g;
+					ay += vecY * currObject.g;
+				}
 			
+				// Now update the projectile's position:
+				theProjectile.x += theProjectile.vx*workingT + 0.5*ax*workingT*workingT;
+				theProjectile.y += theProjectile.vy*workingT + 0.5*ay*workingT*workingT;
+								
+				// Update the projectile's velocity:
+				theProjectile.vx += ax*workingT;
+				theProjectile.vy += ay*workingT;
+				
+				// Do some collision stuff:
+				if (theProjectile.x < 0 || theProjectile.y < 0 ||
+						theProjectile.x > theGame.gameCanvas.getWidth() ||
+						theProjectile.y > theGame.gameCanvas.getHeight())
+					theGame.projectile = null;
+				
+				gravityObjects = theGame.boardObjects.iterator();
+				
+				// Accumulate all accelerations:
+				while (gravityObjects.hasNext())
+				{
+					if (((BoardObject)gravityObjects.next()).handleImpactXY(theProjectile.x,theProjectile.y))
+						theGame.projectile = null;
+				}
 			}
 			// Flip current time into prevTime:
 			prevTime = currTime;
@@ -105,7 +168,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 						
 			// Make sure not to try drawing to a canvas should we be called before we get one:
 			if (c != null) {
-				if (theGame.gameCanvas == null) theGame.createBoard(c.getWidth(), c.getHeight(), 7, 3, 1);
+				if (theGame.gameCanvas == null) theGame.createBoard(c.getWidth(), c.getHeight(), 2, 2, 1);
 				theGame.draw(c);
 			}
 		}
