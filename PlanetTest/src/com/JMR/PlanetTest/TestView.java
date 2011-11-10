@@ -130,6 +130,10 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					vecX /= dist / dist;
 					vecY /= dist / dist;
 					
+					// Fudge factor (It's a game, doesn't have to be physically accurate)
+					vecX *= 2.;
+					vecY *= 2.;
+					
 					// Now multiply by the objects intrinsic acceleration:
 					ax += vecX * currObject.g;
 					ay += vecY * currObject.g;

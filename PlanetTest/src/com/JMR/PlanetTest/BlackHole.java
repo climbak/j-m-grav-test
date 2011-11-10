@@ -60,7 +60,7 @@ public class BlackHole extends BoardObject {
 	public void setBounds(Rect r)
 	{
 		super.setBounds(r);
-		g = (1.0f-(BlackHoleFactory.MEAN_RADIUS-radius))*BASE_G;
+		g = BASE_G;// (1.0f-(BlackHoleFactory.MEAN_RADIUS-radius))*BASE_G;
 	}
 
 	@Override
