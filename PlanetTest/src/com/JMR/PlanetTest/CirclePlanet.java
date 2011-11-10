@@ -44,7 +44,7 @@ public class CirclePlanet extends BoardObject {
 	private void setPlanetParms(){
 		switch (Type){
 		case Earth:
-			parm_land_mass_pnt_percent = .07f;
+			parm_land_mass_pnt_percent = .14f;
 			parm_ocean_color = Color.BLUE;
 			parm_base_land_color = Color.argb(255, 83, 105, 59);
 			parm_shade_colors = new int[][]{{118, 99, 67}, {64, 75, 41}};

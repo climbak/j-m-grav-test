@@ -7,8 +7,8 @@ import android.graphics.Rect;
 import android.util.Log;
 
 public class PlanetFactory {
-	public static final int MEAN_RADIUS = 30;
-	public static final int RADIUS_JITTER = 8;
+	public static final int MEAN_RADIUS = 60;
+	public static final int RADIUS_JITTER = 28;
 	
 	public static BoardObject getRandomPlanet() {
 		CirclePlanet circ = new CirclePlanet();
