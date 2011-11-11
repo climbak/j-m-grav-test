@@ -68,8 +68,8 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 
 					theGame.projectile = new Projectile((float)(Math.random()*theGame.gameCanvas.getWidth()),
 							(float)(Math.random()*theGame.gameCanvas.getHeight()),
-							(float)(Math.random()*5),
-							(float)(Math.random()*5));
+							(float)(Math.random()*150),
+							(float)(Math.random()*150));
 				
 				}
 				try {
@@ -98,6 +98,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 			{	
 				// Create some stuff to do the sim:
 				double ax, ay; // Accumulated accelerations
+				double oldX, oldY;
 				double vecX, vecY;
 				double dist;
 				Projectile theProjectile;
@@ -138,11 +139,21 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 					ax += vecX * currObject.g;
 					ay += vecY * currObject.g;
 				}
-			
-				// Now update the projectile's position:
-				theProjectile.x += theProjectile.vx*workingT + 0.5*ax*workingT*workingT;
-				theProjectile.y += theProjectile.vy*workingT + 0.5*ay*workingT*workingT;
 				
+				theProjectile.x += workingT*(theProjectile.x + 0.5*workingT*theProjectile.vx);
+				theProjectile.y += workingT*(theProjectile.y + 0.5*workingT*theProjectile.vy);
+				
+				theProjectile.vx += workingT*ax;
+				theProjectile.vy += workingT*ay;
+				
+				// Now update the projectile's position:
+				//oldX = theProjectile.x;
+				//oldY = theProjectile.y;
+				//theProjectile.x += theProjectile.vx*workingT + 0.5*ax*workingT*workingT;
+				//theProjectile.y += theProjectile.vy*workingT + 0.5*ay*workingT*workingT;
+				//theProjectile.vx = (theProjectile.x-oldX)/workingT;
+				//theProjectile.vy = (theProjectile.y-oldY)/workingT;
+								
 				// Do some collision stuff:
 				if (theProjectile.x < 0 || theProjectile.y < 0 ||
 						theProjectile.x > theGame.gameCanvas.getWidth() ||
@@ -154,7 +165,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 				// Accumulate all accelerations:
 				while (gravityObjects.hasNext())
 				{
-					if (((BoardObject)gravityObjects.next()).handleImpactXY(theProjectile.x,theProjectile.y))
+					if (((BoardObject)gravityObjects.next()).handleImpactXY((float)theProjectile.x,(float)theProjectile.y))
 						theGame.projectile = null;
 				}
 			}
@@ -168,7 +179,7 @@ public class TestView extends SurfaceView implements SurfaceHolder.Callback {
 						
 			// Make sure not to try drawing to a canvas should we be called before we get one:
 			if (c != null) {
-				if (theGame.gameCanvas == null) theGame.createBoard(c.getWidth(), c.getHeight(), 2, 2, 1);
+				if (theGame.gameCanvas == null) theGame.createBoard(c.getWidth(), c.getHeight(), 0, 1, 0);
 				theGame.draw(c);
 			}
 		}

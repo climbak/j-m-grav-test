@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class Star extends BoardObject {
 	
-	public static final float BASE_G = 50.f;
+	public static final float BASE_G = 30.f;
 	
 	public static final int RED = 0;
 	public static final int YELLOW = 1;

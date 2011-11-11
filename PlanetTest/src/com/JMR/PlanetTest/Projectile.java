@@ -12,10 +12,10 @@ public class Projectile extends Drawable implements Animatable {
 
 	// TODO stub class
 	
-	public float vx;
-	public float vy;
-	public float x;
-	public float y;
+	public double vx;
+	public double vy;
+	public double x;
+	public double y;
 
 	public Projectile(float x, float y, float vx, float vy){
 		this.x = x;
@@ -29,7 +29,7 @@ public class Projectile extends Drawable implements Animatable {
 		Paint myPaint = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.DITHER_FLAG);
 		myPaint.setARGB(255,255,255,255);
 		
-		canvas.drawCircle(x, y, 5, myPaint);
+		canvas.drawCircle((float)x, (float)y, 5, myPaint);
 	}
 
 	@Override

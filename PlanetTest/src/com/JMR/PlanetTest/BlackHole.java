@@ -9,7 +9,7 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class BlackHole extends BoardObject {
-	public static final float BASE_G = 100.f;
+	public static final float BASE_G = 50.f;
 	
 	public BlackHole() {
 		super();
