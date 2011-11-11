@@ -1,8 +1,10 @@
 package com.JMR.PlanetGLTest;
 
 import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.opengl.GLSurfaceView;
+import android.view.Window;
 
 public class PlanetGLTestActivity extends Activity {
 	private GLSurfaceView glView;
@@ -11,6 +13,10 @@ public class PlanetGLTestActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+        Window window = getWindow();
+        window.setFormat(PixelFormat.RGBA_8888);
         
         glView = new PlanetTestGLES20SurfaceView(this);
         
