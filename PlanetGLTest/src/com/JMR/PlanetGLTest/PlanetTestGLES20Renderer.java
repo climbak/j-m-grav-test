@@ -32,13 +32,17 @@ public class PlanetTestGLES20Renderer implements Renderer {
     private float[] _lookAtMatrix = new float[16];
     private float[] _projectionMatrix = new float[16];
     
+    private GLDrawable _background;
+    
     public float mAngle;
 	
 	@Override
 	public void onDrawFrame(GL10 unused) {
 		// Blank the frame:
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-		           
+		
+		_background.draw(_cameraMatrix);
+		
         GameBoard.Instance.draw(_cameraMatrix);
 	}
 
@@ -61,6 +65,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set background fill color to black:
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		_background = new Starfield();
 		
 		Log.d("onSurfaceCreated", "called");
 		
