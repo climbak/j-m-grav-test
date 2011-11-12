@@ -56,7 +56,7 @@ public class PlanetDrawable implements GLDrawable{
 		GLES20.glLinkProgram(_program);
 		
 		
-		float [] tri = new float []{
+		float [] tri = new float[]{
 				-.5f, -.25f, 0,
 				.5f, -.25f, 0,
 				0f, .449016994f, 0
@@ -70,14 +70,14 @@ public class PlanetDrawable implements GLDrawable{
 		_tri_vb.position(0);
 		
 		_position = GLES20.glGetAttribLocation(_program, "vPosition");
-		_v_matrix = GLES20.glGetUniformLocation(_v_shader, "uMVPMatrix");
+		_v_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
 	}
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
 		
-		// GLES20.glUniformMatrix4fv(_v_matrix, 1, false, sceneMatrix, 0);
+		GLES20.glUniformMatrix4fv(_v_matrix, 1, false, sceneMatrix, 0);
 
 		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 12, _tri_vb);
 		GLES20.glEnableVertexAttribArray(_position);

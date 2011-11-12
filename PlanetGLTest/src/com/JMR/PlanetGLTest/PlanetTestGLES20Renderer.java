@@ -38,10 +38,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
 	public void onDrawFrame(GL10 unused) {
 		// Blank the frame:
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-		      
-        // Apply a ModelView Projection transformation
-        Matrix.multiplyMM(_cameraMatrix, 0, _projectionMatrix, 0, _lookAtMatrix, 0);
-        
+		           
         GameBoard.Instance.draw(_cameraMatrix);
 	}
 
@@ -56,6 +53,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
         // in the onDrawFrame() method
         Matrix.frustumM(_projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
         Matrix.setLookAtM(_lookAtMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.multiplyMM(_cameraMatrix, 0, _projectionMatrix, 0, _lookAtMatrix, 0);
         GameBoard.Instance.viewPortChange(width,height);
 	}
 
