@@ -11,6 +11,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import android.util.Log;
 
 public class PlanetTestGLES20Renderer implements Renderer {
 	// This is just a sort of fallback, we should probably write our shaders in separate files:
@@ -27,7 +28,6 @@ public class PlanetTestGLES20Renderer implements Renderer {
         " gl_FragColor = vec4 (0.63671875, 0.76953125, 0.22265625, 1.0); \n" +
         "}                         \n";
 	
-	private GameBoard theGame;
 	private int muMVPMatrixHandle;
     private float[] mMVPMatrix = new float[16];
     private float[] mVMatrix = new float[16];
@@ -43,7 +43,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
         // Apply a ModelView Projection transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
         
-        theGame.draw(mMVPMatrix);
+        GameBoard.Instance.draw(mMVPMatrix);
 	}
 
 	@Override
@@ -52,19 +52,24 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		GLES20.glViewport(0, 0, width, height);
 		
 		float ratio = (float) width / height;
-        
+        Log.d("onSurfaceChanged", "called");
         // this projection matrix is applied to object coodinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
         Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        theGame.viewPortChange(width,height);
+        GameBoard.Instance.viewPortChange(width,height);
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set background fill color to black:
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		theGame = new GameBoard();
+		
+		Log.d("onSurfaceCreated", "called");
+		
+        GameBoard.Instance.create();
+        GameBoard.Instance.add(new PlanetDrawable(40, 40, 30));
+
 	}
 
 	// Helper method to take shader code and compile it.
