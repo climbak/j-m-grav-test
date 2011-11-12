@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 
 public class PlanetTestGLES20SurfaceView extends GLSurfaceView {
 	private final float TOUCH_SCALE_FACTOR = 180.0f / 360; //320;
-    private PlanetTestGLES20Renderer mRenderer;
+    private PlanetTestGLES20Renderer _renderer;
     private float mPreviousX;
     private float mPreviousY;
 	
@@ -17,8 +17,8 @@ public class PlanetTestGLES20SurfaceView extends GLSurfaceView {
         setEGLContextClientVersion(2);
         
         // set the mRenderer member
-        mRenderer = new PlanetTestGLES20Renderer();
-        setRenderer(mRenderer);
+        _renderer = new PlanetTestGLES20Renderer();
+        setRenderer(_renderer);
         
         // Render the view only when there is a change
         // setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);

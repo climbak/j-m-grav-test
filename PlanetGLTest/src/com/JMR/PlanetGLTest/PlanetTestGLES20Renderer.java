@@ -28,10 +28,9 @@ public class PlanetTestGLES20Renderer implements Renderer {
         " gl_FragColor = vec4 (0.63671875, 0.76953125, 0.22265625, 1.0); \n" +
         "}                         \n";
 	
-	private int muMVPMatrixHandle;
-    private float[] mMVPMatrix = new float[16];
-    private float[] mVMatrix = new float[16];
-    private float[] mProjMatrix = new float[16];
+    private float[] _cameraMatrix = new float[16];
+    private float[] _lookAtMatrix = new float[16];
+    private float[] _projectionMatrix = new float[16];
     
     public float mAngle;
 	
@@ -41,9 +40,9 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		      
         // Apply a ModelView Projection transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
+        Matrix.multiplyMM(_cameraMatrix, 0, _projectionMatrix, 0, _lookAtMatrix, 0);
         
-        GameBoard.Instance.draw(mMVPMatrix);
+        GameBoard.Instance.draw(_cameraMatrix);
 	}
 
 	@Override
@@ -55,8 +54,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
         Log.d("onSurfaceChanged", "called");
         // this projection matrix is applied to object coodinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
-        Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.frustumM(_projectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.setLookAtM(_lookAtMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         GameBoard.Instance.viewPortChange(width,height);
 	}
 

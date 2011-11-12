@@ -49,9 +49,7 @@ public class PlanetDrawable implements GLDrawable{
 		
 		GLES20.glShaderSource(_f_shader, defaultFragmentShaderCode);
 		GLES20.glCompileShader(_f_shader);
-		
-		_v_matrix = GLES20.glGetUniformLocation(_v_shader, "uMVPMatrix");
-		
+			
 		_program = GLES20.glCreateProgram();
 		GLES20.glAttachShader(_program, _v_shader);
 		GLES20.glAttachShader(_program, _f_shader);
@@ -72,7 +70,7 @@ public class PlanetDrawable implements GLDrawable{
 		_tri_vb.position(0);
 		
 		_position = GLES20.glGetAttribLocation(_program, "vPosition");
-		
+		_v_matrix = GLES20.glGetUniformLocation(_v_shader, "uMVPMatrix");
 	}
 	
 	@Override
