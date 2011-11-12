@@ -43,7 +43,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
         // Apply a ModelView Projection transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
         
-        theGame.draw();
+        theGame.draw(mMVPMatrix);
 	}
 
 	@Override
@@ -78,26 +78,4 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		
 		return shader;
 	}
-	
-	// All this drawing crap is just for the tutorial, each object should be in charge of drawing itself
-	private FloatBuffer triangleVB;
-	private void initShapes(){
-	    
-        float triangleCoords[] = {
-            // X, Y, Z
-            -0.5f, -0.25f, 0,
-             0.5f, -0.25f, 0,
-             0.0f,  0.559016994f, 0
-        }; 
-        
-        // initialize vertex Buffer for triangle  
-        ByteBuffer vbb = ByteBuffer.allocateDirect(
-                // (# of coordinate values * 4 bytes per float)
-                triangleCoords.length * 4); 
-        vbb.order(ByteOrder.nativeOrder());// use the device hardware's native byte order
-        triangleVB = vbb.asFloatBuffer();  // create a floating point buffer from the ByteBuffer
-        triangleVB.put(triangleCoords);    // add the coordinates to the FloatBuffer
-        triangleVB.position(0);            // set the buffer to read the first coordinate
-    
-    }
 }

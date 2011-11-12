@@ -3,16 +3,18 @@ package com.JMR.PlanetGLTest;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import android.opengl.Matrix;
+
 public class GameBoard implements GLDrawable {
 	public LinkedList<GLDrawable> stuffToDraw;
 	
 	@Override
-	public void draw() {
+	public void draw(float[] sceneMatrix) {
 		Iterator<GLDrawable> iter = stuffToDraw.iterator();
 		
 		while (iter.hasNext())
 		{
-			iter.next().draw();
+			iter.next().draw(sceneMatrix);
 		}
 	}
 
