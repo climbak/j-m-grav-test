@@ -16,4 +16,9 @@ public class GameBoard implements GLDrawable {
 		}
 	}
 
+	public void viewPortChange(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

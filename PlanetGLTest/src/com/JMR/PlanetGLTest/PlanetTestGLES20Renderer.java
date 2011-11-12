@@ -27,12 +27,9 @@ public class PlanetTestGLES20Renderer implements Renderer {
         " gl_FragColor = vec4 (0.63671875, 0.76953125, 0.22265625, 1.0); \n" +
         "}                         \n";
 	
-	private int defaultProgram;
-	private int positionHandle;
-	
+	private GameBoard theGame;
 	private int muMVPMatrixHandle;
     private float[] mMVPMatrix = new float[16];
-    private float[] mMMatrix = new float[16];
     private float[] mVMatrix = new float[16];
     private float[] mProjMatrix = new float[16];
     
@@ -42,27 +39,11 @@ public class PlanetTestGLES20Renderer implements Renderer {
 	public void onDrawFrame(GL10 unused) {
 		// Blank the frame:
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-		
-		// Add program to OpenGL environment
-        GLES20.glUseProgram(defaultProgram);
-        
-        // Prepare the triangle data
-        GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 12, triangleVB);
-        GLES20.glEnableVertexAttribArray(positionHandle);
-        
-        // Create a rotation for the triangle
-        //long time = SystemClock.uptimeMillis() % 4000L;
-        //float angle = 0.090f * ((int) time);
-        Matrix.setRotateM(mMMatrix, 0, mAngle, 0, 0, 1.0f);
-        Matrix.multiplyMM(mMVPMatrix, 0, mVMatrix, 0, mMMatrix, 0);
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
-        
+		      
         // Apply a ModelView Projection transformation
-        // Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
-        GLES20.glUniformMatrix4fv(muMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
         
-        // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
+        theGame.draw();
 	}
 
 	@Override
@@ -75,33 +56,19 @@ public class PlanetTestGLES20Renderer implements Renderer {
         // this projection matrix is applied to object coodinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
-        muMVPMatrixHandle = GLES20.glGetUniformLocation(defaultProgram, "uMVPMatrix");
         Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        theGame.viewPortChange(width,height);
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set background fill color to black:
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		
-		// initialize the triangle vertex array
-        initShapes();
-		
-		// Load up the default shaders:
-		int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, defaultVertexShaderCode);
-		int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, defaultFragmentShaderCode);
-		
-		defaultProgram = GLES20.glCreateProgram();
-		GLES20.glAttachShader(defaultProgram, vertexShader);
-		GLES20.glAttachShader(defaultProgram, fragmentShader);
-		GLES20.glLinkProgram(defaultProgram);
-		
-		// Get handle to the position input in the vertex shader:
-		positionHandle = GLES20.glGetAttribLocation(defaultProgram, "vPosition");
+		theGame = new GameBoard();
 	}
 
 	// Helper method to take shader code and compile it.
-	private int loadShader(int type, String shaderCode) {
+	public static int loadShader(int type, String shaderCode) {
 		// Create the shader:
 		int shader = GLES20.glCreateShader(type);
 		
