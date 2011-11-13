@@ -6,6 +6,10 @@ public class Sphere {
 	 * Then use glDrawElements, not glDrawArrays. Not sure if "type" parameter should be GLES20.GL_INT
 	 * or GLES20.GL_UNSIGNED_INT. Spec says unsigned int, but Java does not have unsigned ints...
 	 */
+	
+	/*
+	 * Icosahedron:
+	 */
 	public static final int ZA = 0;
 	public static final int ZB = 1;
 	public static final int ZC = 2;
@@ -59,4 +63,21 @@ public class Sphere {
 		YD, ZC, XB,
 		YC, XC, ZC
 	};
+	
+	/*
+	 * This subdivides a sphere to get more faces. It assumes the sphere has unit radius.
+	 * INCOMPLETE, DO NOT USE YET
+	 */
+	public static void subdivide(float[] verts, int[] faces, int numDivisions) {
+		int newNumVerts = (int) Math.pow(3, numDivisions)*verts.length;
+		int newNumFaces = (int) Math.pow(4, numDivisions)*faces.length;
+		
+		float[] inVerts = verts;
+		int[] inFaces = faces;
+		
+		verts = new float[newNumVerts];
+		faces = new int[newNumFaces];
+		
+		
+	}
 }
