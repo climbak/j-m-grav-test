@@ -19,7 +19,7 @@ public class PlanetDrawable implements GLDrawable{
 	private static final String defaultFragmentShaderCode = 
         "precision mediump float;  \n" +
         "void main(){              \n" +
-        " gl_FragColor = vec4 (0.63671875, 0.76953125, 0.22265625, 1.0); \n" +
+        " gl_FragColor = vec4 (0.23671875, 0.96953125, 0.22265625, 1.0); \n" +
         "}                         \n";
 	
 	private int _v_shader;
@@ -72,8 +72,6 @@ public class PlanetDrawable implements GLDrawable{
 		
 		_position = GLES20.glGetAttribLocation(_program, "vPosition");
 		_v_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
-		Log.d("~~~~~~~~~~~~~~~~~",new Integer(_position).toString());
-		Log.d("~~~~~~~~~~~~~~~~~",new Integer(_v_matrix).toString());
 	}
 	
 	
