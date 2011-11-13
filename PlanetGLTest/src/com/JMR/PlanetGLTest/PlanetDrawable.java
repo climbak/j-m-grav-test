@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -69,7 +70,7 @@ public class PlanetDrawable implements GLDrawable{
 		
 		_vert_size = tri.length / 3;
 		
-		ByteBuffer vbb = ByteBuffer.allocateDirect(tri.length * 4); // 4 bytes per float or something
+		ByteBuffer vbb = ByteBuffer.allocateDirect(tri.length * Float.SIZE); // 4 bytes per float or something
 		vbb.order(ByteOrder.nativeOrder());
 		_tri_vb = vbb.asFloatBuffer();
 		
@@ -78,10 +79,10 @@ public class PlanetDrawable implements GLDrawable{
 		
 		
 		
-		ByteBuffer ibb = ByteBuffer.allocate(int_arr.length * 1);
+		ByteBuffer ibb = ByteBuffer.allocate(int_arr.length * Byte.SIZE);
 		
 		ibb.order(ByteOrder.nativeOrder());
-		_int_bb = ibb; //.asByteBuffer();
+		_int_bb = ibb; // ibb.asShortBuffer();
 		
 		_int_bb.put(int_arr);
 		_int_bb.position(0);
@@ -120,7 +121,7 @@ public class PlanetDrawable implements GLDrawable{
 		
 		// GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, _tri_size, GLES20.GL_UNSIGNED_BYTE, _int_bb);
-		//Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
+		Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
 		
 		GLES20.glDisableVertexAttribArray(_position);
 	}
