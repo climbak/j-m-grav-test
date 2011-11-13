@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 public class Starfield implements GLDrawable {
 	private static final String starVertexShaderCode = 
@@ -18,11 +19,11 @@ public class Starfield implements GLDrawable {
         "}                         \n";
 
 	private static final String starFragmentShaderCode = 
-		"varying vec4 gl_Color; \n" +
+		//"varying vec4 gl_Color; \n" +
         "precision mediump float;  \n" +
         "void main(){              \n" +
+        //" gl_FragColor = {1.0, 1.0, 1.0, 1.0}; \n" +
         " gl_FragColor = gl_Color; \n" +
-        //" gl_PointSize = 3.0; \n" +
         "}                         \n";
 	
 	private static final int RED = 0;
@@ -44,10 +45,10 @@ public class Starfield implements GLDrawable {
 	private static final float[] WHITE_RGB = {1.f, 1.f, 1.f};
 	private static final float[] BLUE_RGB = {200.f/255.f, 200.f/255.f, 1.f};
 	
-	private static final float MIN_X = -10.f;
-	private static final float MAX_X = 10.f;
-	private static final float MIN_Y = -10.f;
-	private static final float MAX_Y = 10.f;
+	private static final float MIN_X = -1.f;
+	private static final float MAX_X = 1.f;
+	private static final float MIN_Y = -1.f;
+	private static final float MAX_Y = 1.f;
 	private static final float MIN_Z = -1.f;
 	private static final float MAX_Z = -3.f;
 	
@@ -114,14 +115,14 @@ public class Starfield implements GLDrawable {
 				colors[i*4+G] = WHITE_RGB[G];
 				colors[i*4+B] = WHITE_RGB[B];
 				break;
-			case BLUE:
+			default: // BLUE
 				colors[i*4+R] = BLUE_RGB[R];
 				colors[i*4+G] = BLUE_RGB[G];
 				colors[i*4+B] = BLUE_RGB[B];
 			}
 			
 			// Pick a random alpha value:
-			colors[i*4+A] = (float) Math.random();
+			colors[i*4+A] = 1.0f; //(float) Math.random();
 		}
 		
 		// Make those arrays into float buffers:
@@ -138,20 +139,24 @@ public class Starfield implements GLDrawable {
 		
 		_colors.put(colors);
 		_colors.position(0);
+		
+		// Enable the attribute arrays:
+		GLES20.glEnableVertexAttribArray(_position);
+		GLES20.glEnableVertexAttribArray(_color);
 	}
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
 		
+		
+		
 		GLES20.glUniformMatrix4fv(_matrix, 1, false, sceneMatrix, 0);
 
 		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 12, _points);
 		GLES20.glVertexAttribPointer(_color, 4, GLES20.GL_FLOAT, false, 16, _colors);
-		GLES20.glEnableVertexAttribArray(_position);
-		GLES20.glEnableVertexAttribArray(_color);
 		
-		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 3);
+		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_STARS);
 	}
 
 }
