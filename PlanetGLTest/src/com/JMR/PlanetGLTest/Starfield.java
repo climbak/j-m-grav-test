@@ -140,16 +140,16 @@ public class Starfield implements GLDrawable {
 		_colors.put(colors);
 		_colors.position(0);
 		
-		// Enable the attribute arrays:
-		GLES20.glEnableVertexAttribArray(_position);
-		GLES20.glEnableVertexAttribArray(_color);
+		
 	}
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
 		
-		
+		// Enable the attribute arrays:
+		GLES20.glEnableVertexAttribArray(_position);
+		GLES20.glEnableVertexAttribArray(_color);
 		
 		GLES20.glUniformMatrix4fv(_matrix, 1, false, sceneMatrix, 0);
 
@@ -157,6 +157,10 @@ public class Starfield implements GLDrawable {
 		GLES20.glVertexAttribPointer(_color, 4, GLES20.GL_FLOAT, false, 16, _colors);
 		
 		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_STARS);
+		
+		// Disable the attribute arrays:
+		GLES20.glDisableVertexAttribArray(_position);
+		GLES20.glDisableVertexAttribArray(_color);
 	}
 
 }

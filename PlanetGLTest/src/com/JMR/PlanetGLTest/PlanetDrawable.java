@@ -87,5 +87,7 @@ public class PlanetDrawable implements GLDrawable{
 		GLES20.glEnableVertexAttribArray(_position);
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
+		
+		GLES20.glDisableVertexAttribArray(_position);
 	}
 }
