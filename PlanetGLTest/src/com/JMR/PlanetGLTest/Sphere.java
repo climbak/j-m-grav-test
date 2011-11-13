@@ -67,13 +67,13 @@ public class Sphere {
 	
 	/*
 	 * This subdivides a sphere to get more faces. It assumes the sphere has unit radius.
-	 * INCOMPLETE, DO NOT USE YET
+	 * COMPLETE, but lots of index math means it probably has a shit-ton of bugs...must...test....
 	 */
-	public static void subdivide(float[] verts, int[] faces, int numDivisions) {
+	public static void subdivide(float[] verts, int[] faces) {
 		// Allocate new arrays of the proper size:
 		//int newNumVerts = (int) Math.pow(3, numDivisions)*verts.length;
 		//int newNumFaces = (int) Math.pow(4, numDivisions)*faces.length;
-		int newNumVerts = 6 * faces.length;
+		int newNumVerts = 3 * faces.length + verts.length;
 		int newNumFaces = 4 * faces.length;
 		
 		float[] inVerts = verts;
@@ -82,6 +82,12 @@ public class Sphere {
 		verts = new float[newNumVerts];
 		faces = new int[newNumFaces];
 		
+		// Copy old verts into new vert array:
+		for (int k = 0; k < inVerts.length; k++)
+		{
+			verts[k] = inVerts[k];
+		}
+		
 		// Time to subdivide:
 		float[] vert1 = new float[3];
 		float[] vert2 = new float[3];
@@ -89,11 +95,14 @@ public class Sphere {
 		float[] newVert1 = new float[3];
 		float[] newVert2 = new float[3];
 		float[] newVert3 = new float[3];
+		int newIndex1, newIndex2, newIndex3, currVertIndex, currFaceIndex;
 		int[] face = new int[3];
 		int[] newFace1 = new int[3];
 		int[] newFace2 = new int[3];
 		int[] newFace3 = new int[3];
 		int[] newFace4 = new int[3];
+		currVertIndex = inVerts.length;
+		currFaceIndex = 0;
 		for (int i = 0; i < inFaces.length; i++)
 		{
 			// Get current face:
@@ -112,10 +121,75 @@ public class Sphere {
 			vert3[1] = inVerts[face[2]/3+1];
 			vert3[2] = inVerts[face[2]/3+2];
 			
-			// Make new vertices, positive permutation (01,12,20):
+			// Make new vertices, positive permutation (12,23,31):
 			newVert1[0] = (vert1[0] + vert2[0])/2.f;
 			newVert1[1] = (vert1[1] + vert2[1])/2.f;
 			newVert1[2] = (vert1[2] + vert2[2])/2.f;
+			
+			newVert2[0] = (vert2[0] + vert3[0])/2.f;
+			newVert2[1] = (vert2[1] + vert3[1])/2.f;
+			newVert2[2] = (vert2[2] + vert3[2])/2.f;
+			
+			newVert3[0] = (vert3[0] + vert1[0])/2.f;
+			newVert3[1] = (vert3[1] + vert1[1])/2.f;
+			newVert3[2] = (vert3[2] + vert1[2])/2.f;
+			
+			// Add those vertices to the array:
+			newIndex1 = currVertIndex + 0;
+			newIndex2 = currVertIndex + 3;
+			newIndex3 = currVertIndex + 6;
+			
+			verts[currVertIndex++] = newVert1[0];
+			verts[currVertIndex++] = newVert1[1];
+			verts[currVertIndex++] = newVert1[2];
+			
+			verts[currVertIndex++] = newVert2[0];
+			verts[currVertIndex++] = newVert2[1];
+			verts[currVertIndex++] = newVert2[2];
+			
+			verts[currVertIndex++] = newVert3[0];
+			verts[currVertIndex++] = newVert3[1];
+			verts[currVertIndex++] = newVert3[2];
+			
+			/*
+			 * Make new faces:
+			 * {1,new1,new3}
+			 * {3,new3,new2}
+			 * {new1,new2,new3}
+			 * {2,new2,new1}
+			 */
+			newFace1[0] = face[0];
+			newFace1[1] = newIndex1;
+			newFace1[2] = newIndex3;
+			
+			newFace2[0] = face[2];
+			newFace2[1] = newIndex3;
+			newFace2[2] = newIndex2;
+			
+			newFace3[0] = newIndex1;
+			newFace3[1] = newIndex2;
+			newFace3[2] = newIndex3;
+			
+			newFace4[0] = face[1];
+			newFace4[1] = newIndex2;
+			newFace4[2] = newIndex1;
+			
+			// AAAAaaand...add those to the face array:
+			faces[currFaceIndex++] = newFace1[0];
+			faces[currFaceIndex++] = newFace1[1];
+			faces[currFaceIndex++] = newFace1[2];
+			
+			faces[currFaceIndex++] = newFace2[0];
+			faces[currFaceIndex++] = newFace2[1];
+			faces[currFaceIndex++] = newFace2[2];
+			
+			faces[currFaceIndex++] = newFace3[0];
+			faces[currFaceIndex++] = newFace3[1];
+			faces[currFaceIndex++] = newFace3[2];
+			
+			faces[currFaceIndex++] = newFace4[0];
+			faces[currFaceIndex++] = newFace4[1];
+			faces[currFaceIndex++] = newFace4[2];
 		}
 	}
 }
