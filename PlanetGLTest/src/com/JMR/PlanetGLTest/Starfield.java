@@ -18,7 +18,7 @@ public class Starfield implements GLDrawable {
         //" gl_BackColor = vColor;    \n" +
         //" gl_Color = vColor;        \n" +
         " outColor = color;         \n" +
-        " gl_PointSize = 3.0;       \n" +
+        " gl_PointSize = 1.5;       \n" +
         " gl_Position = uMVPMatrix * position; \n" +
         "}                          \n";
 
@@ -45,7 +45,7 @@ public class Starfield implements GLDrawable {
 	private static final int B = 2;
 	private static final int A = 3;
 	
-	private static final float[] RED_RGB = {1.f, 200.f/255.f, 200.f/255.f};
+	private static final float[] RED_RGB = {1.f, 100.f/255.f, 100.f/255.f};
 	private static final float[] YELLOW_RGB = {1.f, 1.f, 96.f/255.f};
 	private static final float[] WHITE_RGB = {1.f, 1.f, 1.f};
 	private static final float[] BLUE_RGB = {200.f/255.f, 200.f/255.f, 1.f};
@@ -54,8 +54,8 @@ public class Starfield implements GLDrawable {
 	private static final float MAX_X = 10.f;
 	private static final float MIN_Y = -10.f;
 	private static final float MAX_Y = 10.f;
-	private static final float MIN_Z = -1.f;
-	private static final float MAX_Z = -3.f;
+	private static final float MIN_Z = 1.f;
+	private static final float MAX_Z = 3.f;
 	
 	private static final int NUM_STARS = 10000;
 	
