@@ -1,8 +1,10 @@
 package com.JMR.PlanetGLTest;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -32,8 +34,11 @@ public class PlanetDrawable implements GLDrawable{
 	private int _program;
 	
 	private int _position;
-	private FloatBuffer _tri_vb;
 	
+	private FloatBuffer _tri_vb;
+	private ByteBuffer _int_bb; 
+	private int _vert_size;
+	private int _tri_size;
 	
 	public PlanetDrawable(int x, int y, int radius){
 		_x = x;
@@ -57,11 +62,12 @@ public class PlanetDrawable implements GLDrawable{
 		GLES20.glLinkProgram(_program);
 		
 		
-		float [] tri = new float[]{
-				-.5f, -.25f, 0,
-				.5f, -.25f, 0,
-				0f, .449016994f, 0
-		};
+		float [] tri = Sphere.ICOSAHEDRON_VERTICES;
+		byte [] int_arr = Sphere.ICOSAHEDRON_INDICES;
+	
+		//Sphere.subdivide(tri, int_arr);
+		
+		_vert_size = tri.length / 3;
 		
 		ByteBuffer vbb = ByteBuffer.allocateDirect(tri.length * 4); // 4 bytes per float or something
 		vbb.order(ByteOrder.nativeOrder());
@@ -69,6 +75,18 @@ public class PlanetDrawable implements GLDrawable{
 		
 		_tri_vb.put(tri);
 		_tri_vb.position(0);
+		
+		
+		
+		ByteBuffer ibb = ByteBuffer.allocate(int_arr.length * 1);
+		
+		ibb.order(ByteOrder.nativeOrder());
+		_int_bb = ibb; //.asByteBuffer();
+		
+		_int_bb.put(int_arr);
+		_int_bb.position(0);
+		_tri_size = int_arr.length / 3;
+		
 		
 		_position = GLES20.glGetAttribLocation(_program, "vPosition");
 		_v_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
@@ -81,12 +99,28 @@ public class PlanetDrawable implements GLDrawable{
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
 		
-		GLES20.glUniformMatrix4fv(_v_matrix, 1, false, sceneMatrix, 0);
-
-		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 12, _tri_vb);
+		float[] ident = new float[] {
+				1.f, 0, 0, 0,
+				0, 1.f, 0, 0,
+				0, 0, 1.f, 0,
+				0, 0, 0, 1.f
+		};
+		
+		Matrix.scaleM(ident, 0, .3f, .3f, .3f);
+		float[] result = new float[16];
+		Matrix.multiplyMM(result, 0, sceneMatrix, 0, ident, 0);
+		
+		GLES20.glUniformMatrix4fv(_v_matrix, 1, false, result, 0);
+		
+		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 0, _tri_vb);
+		
+		//Log.d("PlanetDrawable.draw_before",new Integer(GLES20.glGetError()).toString());
+		
 		GLES20.glEnableVertexAttribArray(_position);
 		
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
+		// GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, _tri_size, GLES20.GL_UNSIGNED_BYTE, _int_bb);
+		//Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
 		
 		GLES20.glDisableVertexAttribArray(_position);
 	}

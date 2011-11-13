@@ -42,7 +42,7 @@ public class Sphere {
 		0, C1, -C2		// XD
 	};
 	
-	public static int[] ICOSAHEDRON_INDICES = {
+	public static byte[] ICOSAHEDRON_INDICES = {
 		YA, XA, YD,
 		YA, YD, XB,
 		YB, YC, XD,
@@ -69,7 +69,7 @@ public class Sphere {
 	 * This subdivides a sphere to get more faces. It assumes the sphere has unit radius.
 	 * COMPLETE, but lots of index math means it probably has a shit-ton of bugs...must...test....
 	 */
-	public static void subdivide(float[] verts, int[] faces) {
+	public static void subdivide(float[] verts, byte[] faces) {
 		// Allocate new arrays of the proper size:
 		//int newNumVerts = (int) Math.pow(3, numDivisions)*verts.length;
 		//int newNumFaces = (int) Math.pow(4, numDivisions)*faces.length;
@@ -77,10 +77,10 @@ public class Sphere {
 		int newNumFaces = 4 * faces.length;
 		
 		float[] inVerts = verts;
-		int[] inFaces = faces;
+		byte[] inFaces = faces;
 		
 		verts = new float[newNumVerts];
-		faces = new int[newNumFaces];
+		faces = new byte[newNumFaces];
 		
 		// Copy old verts into new vert array:
 		for (int k = 0; k < inVerts.length; k++)
@@ -95,13 +95,13 @@ public class Sphere {
 		float[] newVert1 = new float[3];
 		float[] newVert2 = new float[3];
 		float[] newVert3 = new float[3];
-		int newIndex1, newIndex2, newIndex3, currVertIndex, currFaceIndex;
-		int[] face = new int[3];
-		int[] newFace1 = new int[3];
-		int[] newFace2 = new int[3];
-		int[] newFace3 = new int[3];
-		int[] newFace4 = new int[3];
-		currVertIndex = inVerts.length;
+		byte newIndex1, newIndex2, newIndex3, currVertIndex, currFaceIndex;
+		byte[] face = new byte[3];
+		byte[] newFace1 = new byte[3];
+		byte[] newFace2 = new byte[3];
+		byte[] newFace3 = new byte[3];
+		byte[] newFace4 = new byte[3];
+		currVertIndex = (byte)inVerts.length;
 		currFaceIndex = 0;
 		for (int i = 0; i < inFaces.length; i++)
 		{
@@ -135,9 +135,9 @@ public class Sphere {
 			newVert3[2] = (vert3[2] + vert1[2])/2.f;
 			
 			// Add those vertices to the array:
-			newIndex1 = currVertIndex + 0;
-			newIndex2 = currVertIndex + 3;
-			newIndex3 = currVertIndex + 6;
+			newIndex1 = (byte)(currVertIndex + 0);
+			newIndex2 = (byte)(currVertIndex + 3);
+			newIndex3 = (byte)(currVertIndex + 6);
 			
 			verts[currVertIndex++] = newVert1[0];
 			verts[currVertIndex++] = newVert1[1];
