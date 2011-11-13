@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 import android.util.Log;
 
 public class PlanetDrawable implements GLDrawable{
@@ -73,6 +74,9 @@ public class PlanetDrawable implements GLDrawable{
 		_v_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
 	}
 	
+	
+	
+	
 	@Override
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
@@ -84,5 +88,4 @@ public class PlanetDrawable implements GLDrawable{
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
 	}
-
 }

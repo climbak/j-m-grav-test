@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.opengl.GLSurfaceView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 
 public class PlanetGLTestActivity extends Activity {
@@ -40,6 +42,22 @@ public class PlanetGLTestActivity extends Activity {
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
         glView.onResume();
+    }
+    
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu){
+    	menu.add(Menu.NONE, 0, Menu.NONE, "Exit");
+    	return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+    	
+    	if (item.getItemId() == 0){
+    		System.exit(0);
+    	}
+    	
+    	return true;
     }
 
 }
