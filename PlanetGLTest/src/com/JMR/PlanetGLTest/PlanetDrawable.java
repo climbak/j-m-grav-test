@@ -120,8 +120,9 @@ public class PlanetDrawable implements GLDrawable{
 		GLES20.glEnableVertexAttribArray(_position);
 		
 		// GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
-		GLES20.glDrawElements(GLES20.GL_TRIANGLES, _tri_size, GLES20.GL_UNSIGNED_BYTE, _int_bb);
-		Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, _vert_size * 12, GLES20.GL_UNSIGNED_BYTE, _int_bb);
+
+		//Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
 		
 		GLES20.glDisableVertexAttribArray(_position);
 	}
