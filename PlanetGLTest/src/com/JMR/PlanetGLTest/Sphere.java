@@ -67,7 +67,7 @@ public class Sphere {
 	
 	/*
 	 * This subdivides a sphere to get more faces. It assumes the sphere has unit radius.
-	 * COMPLETE, but lots of index math means it probably has a shit-ton of bugs...must...test....
+	 * COMPLETE, but breaks. Need to debug.
 	 */
 	public static void subdivide(float[] verts, int[] faces) {
 		// Allocate new arrays of the proper size:
