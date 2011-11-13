@@ -72,6 +72,8 @@ public class PlanetDrawable implements GLDrawable{
 		
 		_position = GLES20.glGetAttribLocation(_program, "vPosition");
 		_v_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
+		Log.d("~~~~~~~~~~~~~~~~~",new Integer(_position).toString());
+		Log.d("~~~~~~~~~~~~~~~~~",new Integer(_v_matrix).toString());
 	}
 	
 	

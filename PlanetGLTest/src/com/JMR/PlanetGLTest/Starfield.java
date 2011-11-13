@@ -10,18 +10,18 @@ import android.util.Log;
 public class Starfield implements GLDrawable {
 	private static final String starVertexShaderCode = 
 		"uniform mat4 uMVPMatrix;   \n" +
-		"attribute vec4 vPosition; \n" +
-		"attribute vec4 vColor; \n" +
-        "void main(){              \n" +
+		"attribute vec4 vPosition;  \n" +
+		"attribute vec4 vColor;     \n" +
+        "void main(){               \n" +
+        " gl_FrontColor = vColor;   \n" +
+        " gl_BackColor = vColor;    \n" +
+        //" gl_Color = vColor;        \n" +
+        " gl_PointSize = 3.0;       \n" +
         " gl_Position = uMVPMatrix * vPosition; \n" +
-        " gl_FrontColor = vColor; \n" +
-        " gl_BackColor = vColor; \n" +
-        " gl_Color = vColor; \n " +
-        " gl_PointSize = 3.0; \n" +
-        "}                         \n";
+        "}                          \n";
 
 	private static final String starFragmentShaderCode = 
-		"varying vec4 gl_Color; \n" +
+		//"varying vec4 gl_Color;    \n" +
         "precision mediump float;  \n" +
         "void main(){              \n" +
         //" gl_FragColor = vec4 (1.0, 1.0, 1.0, 1.0); \n" +
@@ -58,7 +58,7 @@ public class Starfield implements GLDrawable {
 	
 	private int _v_shader;
 	private int _f_shader;
-	private int _program;
+	private int _starProgram;
 	private int _matrix;
 	private int _position;
 	private int _color;
@@ -71,27 +71,32 @@ public class Starfield implements GLDrawable {
 		
 		GLES20.glShaderSource(_v_shader, starVertexShaderCode);
 		GLES20.glCompileShader(_v_shader);
+		Log.d("Starfield.Starfield$Vertex Shader Compiled:GL_Error",new Integer(GLES20.glGetError()).toString());
 		
 		_f_shader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
 		
 		GLES20.glShaderSource(_f_shader, starFragmentShaderCode);
 		GLES20.glCompileShader(_f_shader);
-			
-		_program = GLES20.glCreateProgram();
-		GLES20.glAttachShader(_program, _v_shader);
-		GLES20.glAttachShader(_program, _f_shader);
-		GLES20.glLinkProgram(_program);
+		Log.d("Starfield.Starfield$Fragment Shader Compiled:GL_Error",new Integer(GLES20.glGetError()).toString());
+
+		
+		_starProgram = GLES20.glCreateProgram();
+		GLES20.glAttachShader(_starProgram, _v_shader);
+		GLES20.glAttachShader(_starProgram, _f_shader);
+		GLES20.glLinkProgram(_starProgram);
 		
 		Log.d("********************************************","*****************************************");
 		Log.d("Starfield.Starfield$Program Created:GL_Error",new Integer(GLES20.glGetError()).toString());
+		Log.d("Starfiled.Starfiled$_program:value", new Integer(_starProgram).toString());
 	
 		// Get attributes/etc:
-		_position = GLES20.glGetAttribLocation(_program, "vPosition"); // WHY IS THIS RETURNING -1!!!?!
+		_position = GLES20.glGetAttribLocation(_starProgram, "vPosition"); // WHY IS THIS RETURNING -1!!!?!
 		Log.d("Starfield.Starfield$_position:GL_Error",new Integer(GLES20.glGetError()).toString());
 		Log.d("Starfield.Starfiled$_position:value", new Integer(_position).toString());
-		Log.d("Starfiled.Starfiled$_program:value", new Integer(_program).toString());
-		_color = GLES20.glGetAttribLocation(_program, "vColor");
-		_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
+		_color = GLES20.glGetAttribLocation(_starProgram, "vColor");
+		Log.d("Starfield.Starfiled$_color:value", new Integer(_color).toString());
+		_matrix = GLES20.glGetUniformLocation(_starProgram, "uMVPMatrix");
+		Log.d("Starfield.Starfiled$_matrix:value", new Integer(_matrix).toString());
 		
 		Log.d("********************************************","*****************************************");
 		
@@ -155,7 +160,7 @@ public class Starfield implements GLDrawable {
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
-		GLES20.glUseProgram(_program);
+		GLES20.glUseProgram(_starProgram);
 		
 		GLES20.glUniformMatrix4fv(_matrix, 1, false, sceneMatrix, 0);
 
