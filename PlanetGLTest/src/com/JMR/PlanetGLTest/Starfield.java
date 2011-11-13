@@ -15,14 +15,16 @@ public class Starfield implements GLDrawable {
         "void main(){              \n" +
         " gl_Position = uMVPMatrix * vPosition; \n" +
         " gl_FrontColor = vColor; \n" +
+        " gl_BackColor = vColor; \n" +
+        " gl_Color = vColor; \n " +
         " gl_PointSize = 3.0; \n" +
         "}                         \n";
 
 	private static final String starFragmentShaderCode = 
-		//"varying vec4 gl_Color; \n" +
+		"varying vec4 gl_Color; \n" +
         "precision mediump float;  \n" +
         "void main(){              \n" +
-        //" gl_FragColor = {1.0, 1.0, 1.0, 1.0}; \n" +
+        //" gl_FragColor = vec4 (1.0, 1.0, 1.0, 1.0); \n" +
         " gl_FragColor = gl_Color; \n" +
         "}                         \n";
 	
@@ -45,10 +47,10 @@ public class Starfield implements GLDrawable {
 	private static final float[] WHITE_RGB = {1.f, 1.f, 1.f};
 	private static final float[] BLUE_RGB = {200.f/255.f, 200.f/255.f, 1.f};
 	
-	private static final float MIN_X = -1.f;
-	private static final float MAX_X = 1.f;
-	private static final float MIN_Y = -1.f;
-	private static final float MAX_Y = 1.f;
+	private static final float MIN_X = -10.f;
+	private static final float MAX_X = 10.f;
+	private static final float MIN_Y = -10.f;
+	private static final float MAX_Y = 10.f;
 	private static final float MIN_Z = -1.f;
 	private static final float MAX_Z = -3.f;
 	
@@ -80,10 +82,18 @@ public class Starfield implements GLDrawable {
 		GLES20.glAttachShader(_program, _f_shader);
 		GLES20.glLinkProgram(_program);
 		
+		Log.d("********************************************","*****************************************");
+		Log.d("Starfield.Starfield$Program Created:GL_Error",new Integer(GLES20.glGetError()).toString());
+	
 		// Get attributes/etc:
-		_position = GLES20.glGetAttribLocation(_program, "vPosition");
+		_position = GLES20.glGetAttribLocation(_program, "vPosition"); // WHY IS THIS RETURNING -1!!!?!
+		Log.d("Starfield.Starfield$_position:GL_Error",new Integer(GLES20.glGetError()).toString());
+		Log.d("Starfield.Starfiled$_position:value", new Integer(_position).toString());
+		Log.d("Starfiled.Starfiled$_program:value", new Integer(_program).toString());
 		_color = GLES20.glGetAttribLocation(_program, "vColor");
 		_matrix = GLES20.glGetUniformLocation(_program, "uMVPMatrix");
+		
+		Log.d("********************************************","*****************************************");
 		
 		// Create points:
 		float[] points = new float[NUM_STARS*3];
@@ -95,7 +105,7 @@ public class Starfield implements GLDrawable {
 			points[i*3+X] = (float) (Math.random()*(MAX_X-MIN_X)+MIN_X);
 			points[i*3+Y] = (float) (Math.random()*(MAX_Y-MIN_Y)+MIN_Y);
 			points[i*3+Z] = (float) (Math.random()*(MAX_Z-MIN_Z)+MIN_Z);
-			
+						
 			// Pick a random color:
 			color = (int) (Math.random()*4);
 			switch(color)
@@ -120,7 +130,7 @@ public class Starfield implements GLDrawable {
 				colors[i*4+G] = BLUE_RGB[G];
 				colors[i*4+B] = BLUE_RGB[B];
 			}
-			
+						
 			// Pick a random alpha value:
 			colors[i*4+A] = 1.0f; //(float) Math.random();
 		}
@@ -147,14 +157,14 @@ public class Starfield implements GLDrawable {
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
 		
-		// Enable the attribute arrays:
-		GLES20.glEnableVertexAttribArray(_position);
-		GLES20.glEnableVertexAttribArray(_color);
-		
 		GLES20.glUniformMatrix4fv(_matrix, 1, false, sceneMatrix, 0);
 
 		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 12, _points);
 		GLES20.glVertexAttribPointer(_color, 4, GLES20.GL_FLOAT, false, 16, _colors);
+		
+		// Enable the attribute arrays:
+		GLES20.glEnableVertexAttribArray(_position);
+		GLES20.glEnableVertexAttribArray(_color);
 		
 		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_STARS);
 		
