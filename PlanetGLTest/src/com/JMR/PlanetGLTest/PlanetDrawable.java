@@ -126,9 +126,10 @@ public class PlanetDrawable implements GLDrawable{
 		//float [] tri = Sphere.ICOSAHEDRON_VERTICES;
 		float [] tri = Sphere.ICOSAHEDRON;
 		tri = Sphere.subdivide(tri);
-		tri = Sphere.subdivide(tri);
+		//tri = Sphere.subdivide(tri);
 		byte [] int_arr = Sphere.ICOSAHEDRON_INDICES;
 	
+		_tri_size = tri.length;
 		//Sphere.subdivide(tri, int_arr);
 		
 		_vert_size = tri.length / 3;
@@ -149,7 +150,6 @@ public class PlanetDrawable implements GLDrawable{
 		
 		_int_bb.put(int_arr);
 		_int_bb.position(0);
-		_tri_size = int_arr.length / 3;
 
 		_position = GLES20.glGetAttribLocation(_program, "a_Position");
 		_lightpos = GLES20.glGetUniformLocation(_program, "u_LightPos");
@@ -202,7 +202,7 @@ public class PlanetDrawable implements GLDrawable{
 		
 		GLES20.glEnableVertexAttribArray(_position);
 		
-		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 65535*2);
+		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _tri_size);
 		//GLES20.glDrawElements(GLES20.GL_TRIANGLES, _tri_size * 3, GLES20.GL_UNSIGNED_BYTE, _int_bb);
 
 		//Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
