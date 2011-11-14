@@ -95,82 +95,84 @@ public class Sphere {
 	 * This subdivides a sphere to get more faces. It assumes the sphere has unit radius.
 	 * COMPLETE, but breaks. Need to debug.
 	 */
-	public static void subdivide(float[] verts) {
+	public static float[] subdivide(float[] verts) {
 		int newNumVerts = verts.length * 4;
 		float dist;
 		
 		float[] inVerts = verts;
-		verts = new float[newNumVerts];
+		float [] newVerts = new float[newNumVerts];
 		
 		for (int i = 0; i < inVerts.length; i+=3) // Every 3 is a vert, every 3 verts is a face
 		{
 			/*
 			 *  Subdivide Top face:
 			 */
-			verts[i*4+0] = inVerts[i];
-			verts[i*4+1] = (inVerts[i]+inVerts[i+1])/2.f;
-			verts[i*4+2] = (inVerts[i]+inVerts[i+2])/2.f;
+			newVerts[i*4+0] = inVerts[i];
+			newVerts[i*4+1] = (inVerts[i]+inVerts[i+1])/2.f;
+			newVerts[i*4+2] = (inVerts[i]+inVerts[i+2])/2.f;
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(verts[i*4+0]*verts[i*4+0] + 
-					verts[i*4+1]*verts[i*4+1] + 
-					verts[i*4+2]*verts[i*4+2]));
+			dist = (float) (Math.sqrt(newVerts[i*4+0]*newVerts[i*4+0] + 
+					newVerts[i*4+1]*newVerts[i*4+1] + 
+					newVerts[i*4+2]*newVerts[i*4+2]));
 			
 			// Normalize:
-			verts[i*4+0] /= dist;
-			verts[i*4+1] /= dist;
-			verts[i*4+2] /= dist;
+			newVerts[i*4+0] /= dist;
+			newVerts[i*4+1] /= dist;
+			newVerts[i*4+2] /= dist;
 			
 			/*
 			 *  Subdivide Bottom Left face:
 			 */
-			verts[i*4+3] = (inVerts[i]+inVerts[i+2])/2.f;
-			verts[i*4+4] = (inVerts[i+1]+inVerts[i+2])/2.f;
-			verts[i*4+5] = inVerts[i+2];
+			newVerts[i*4+3] = (inVerts[i]+inVerts[i+2])/2.f;
+			newVerts[i*4+4] = (inVerts[i+1]+inVerts[i+2])/2.f;
+			newVerts[i*4+5] = inVerts[i+2];
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(verts[i*4+3]*verts[i*4+3] + 
-					verts[i*4+4]*verts[i*4+4] + 
-					verts[i*4+5]*verts[i*4+5]));
+			dist = (float) (Math.sqrt(newVerts[i*4+3]*newVerts[i*4+3] + 
+					newVerts[i*4+4]*newVerts[i*4+4] + 
+					newVerts[i*4+5]*newVerts[i*4+5]));
 			
 			// Normalize:
-			verts[i*4+3] /= dist;
-			verts[i*4+4] /= dist;
-			verts[i*4+5] /= dist;
+			newVerts[i*4+3] /= dist;
+			newVerts[i*4+4] /= dist;
+			newVerts[i*4+5] /= dist;
 			
 			/*
 			 *  Subdivide Center face:
 			 */
-			verts[i*4+6] = (inVerts[i]+inVerts[i+2])/2.f;
-			verts[i*4+7] = (inVerts[i]+inVerts[i+1])/2.f;
-			verts[i*4+8] = (inVerts[i+1]+inVerts[i+2])/2.f;
+			newVerts[i*4+6] = (inVerts[i]+inVerts[i+2])/2.f;
+			newVerts[i*4+7] = (inVerts[i]+inVerts[i+1])/2.f;
+			newVerts[i*4+8] = (inVerts[i+1]+inVerts[i+2])/2.f;
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(verts[i*4+6]*verts[i*4+6] + 
-					verts[i*4+7]*verts[i*4+7] + 
-					verts[i*4+8]*verts[i*4+8]));
+			dist = (float) (Math.sqrt(newVerts[i*4+6]*newVerts[i*4+6] + 
+					newVerts[i*4+7]*newVerts[i*4+7] + 
+					newVerts[i*4+8]*newVerts[i*4+8]));
 			
 			// Normalize:
-			verts[i*4+6] /= dist;
-			verts[i*4+7] /= dist;
-			verts[i*4+8] /= dist;
+			newVerts[i*4+6] /= dist;
+			newVerts[i*4+7] /= dist;
+			newVerts[i*4+8] /= dist;
 			
 			/*
 			 *  Subdivide Bottom Right face:
 			 */
-			verts[i*4+9] = (inVerts[i]+inVerts[i+1])/2.f;
-			verts[i*4+10]= inVerts[i+1];
-			verts[i*4+11]= (inVerts[i+1]+inVerts[i+2])/2.f;
+			newVerts[i*4+9] = (inVerts[i]+inVerts[i+1])/2.f;
+			newVerts[i*4+10]= inVerts[i+1];
+			newVerts[i*4+11]= (inVerts[i+1]+inVerts[i+2])/2.f;
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(verts[i*4+9]*verts[i*4+9] + 
-					verts[i*4+10]*verts[i*4+10] + 
-					verts[i*4+11]*verts[i*4+11]));
+			dist = (float) (Math.sqrt(newVerts[i*4+9]*newVerts[i*4+9] + 
+					newVerts[i*4+10]*newVerts[i*4+10] + 
+					newVerts[i*4+11]*newVerts[i*4+11]));
 			
 			// Normalize:
-			verts[i*4+9] /= dist;
-			verts[i*4+10] /= dist;
-			verts[i*4+11] /= dist;
+			newVerts[i*4+9] /= dist;
+			newVerts[i*4+10] /= dist;
+			newVerts[i*4+11] /= dist;
 		}
+		
+		return newVerts;
 	}
 }
