@@ -95,82 +95,211 @@ public class Sphere {
 	 * This subdivides a sphere to get more faces. It assumes the sphere has unit radius.
 	 * COMPLETE, but breaks. Need to debug.
 	 */
+	public static final int X = 0;
+	public static final int Y = 1;
+	public static final int Z = 2;
 	public static float[] subdivide(float[] verts) {
-		int newNumVerts = verts.length * 4;
+		int newNumVerts = verts.length * 36;
 		float dist;
 		
-		float[] inVerts = verts;
 		float [] newVerts = new float[newNumVerts];
 		
-		for (int i = 0; i < inVerts.length; i+=3) // Every 3 is a vert, every 3 verts is a face
+		for (int i = 0; i < verts.length; i+=9)
 		{
 			/*
 			 *  Subdivide Top face:
 			 */
-			newVerts[i*4+0] = inVerts[i];
-			newVerts[i*4+1] = (inVerts[i]+inVerts[i+1])/2.f;
-			newVerts[i*4+2] = (inVerts[i]+inVerts[i+2])/2.f;
+			// Vertex 1:
+			newVerts[i*36+0] = verts[i+X];
+			newVerts[i*36+1] = verts[i+Y];
+			newVerts[i*36+2] = verts[i+Z];
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(newVerts[i*4+0]*newVerts[i*4+0] + 
-					newVerts[i*4+1]*newVerts[i*4+1] + 
-					newVerts[i*4+2]*newVerts[i*4+2]));
+			dist = (float) (Math.sqrt(newVerts[i*36+0]*newVerts[i*36+0] + 
+					newVerts[i*36+1]*newVerts[i*36+1] + 
+					newVerts[i*36+2]*newVerts[i*36+2]));
 			
 			// Normalize:
-			newVerts[i*4+0] /= dist;
-			newVerts[i*4+1] /= dist;
-			newVerts[i*4+2] /= dist;
+			newVerts[i*36+0] /= dist;
+			newVerts[i*36+1] /= dist;
+			newVerts[i*36+2] /= dist;
 			
+			// Vertex 2:
+			newVerts[i*36+3] = (verts[i+X]+verts[i+X+3])/2.f;
+			newVerts[i*36+4] = (verts[i+Y]+verts[i+Y+3])/2.f;
+			newVerts[i*36+5] = (verts[i+Z]+verts[i+Z+3])/2.f;
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+3]*newVerts[i*36+3] + 
+					newVerts[i*36+4]*newVerts[i*36+4] + 
+					newVerts[i*36+5]*newVerts[i*36+5]));
+			
+			// Normalize:
+			newVerts[i*36+3] /= dist;
+			newVerts[i*36+4] /= dist;
+			newVerts[i*36+5] /= dist;
+			
+			// Vertex 3:
+			newVerts[i*36+6] = (verts[i+X]+verts[i+X+6])/2.f;
+			newVerts[i*36+7] = (verts[i+Y]+verts[i+Y+6])/2.f;
+			newVerts[i*36+8] = (verts[i+Z]+verts[i+Z+6])/2.f;
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+6]*newVerts[i*36+6] + 
+					newVerts[i*36+7]*newVerts[i*36+7] + 
+					newVerts[i*36+8]*newVerts[i*36+8]));
+			
+			// Normalize:
+			newVerts[i*36+6] /= dist;
+			newVerts[i*36+7] /= dist;
+			newVerts[i*36+8] /= dist;
+			
+			/***************************************************************/
 			/*
 			 *  Subdivide Bottom Left face:
 			 */
-			newVerts[i*4+3] = (inVerts[i]+inVerts[i+2])/2.f;
-			newVerts[i*4+4] = (inVerts[i+1]+inVerts[i+2])/2.f;
-			newVerts[i*4+5] = inVerts[i+2];
+			// Vertex 1:
+			newVerts[i*36+9] = (verts[i+X]+verts[i+X+6])/2.f;
+			newVerts[i*36+10] = (verts[i+Y]+verts[i+Y+6])/2.f;
+			newVerts[i*36+11] = (verts[i+Z]+verts[i+Z+6])/2.f;
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(newVerts[i*4+3]*newVerts[i*4+3] + 
-					newVerts[i*4+4]*newVerts[i*4+4] + 
-					newVerts[i*4+5]*newVerts[i*4+5]));
+			dist = (float) (Math.sqrt(newVerts[i*36+9]*newVerts[i*36+9] + 
+					newVerts[i*36+10]*newVerts[i*36+10] + 
+					newVerts[i*36+11]*newVerts[i*36+11]));
 			
 			// Normalize:
-			newVerts[i*4+3] /= dist;
-			newVerts[i*4+4] /= dist;
-			newVerts[i*4+5] /= dist;
+			newVerts[i*36+9] /= dist;
+			newVerts[i*36+10] /= dist;
+			newVerts[i*36+11] /= dist;
 			
+			// Vertex 2:
+			newVerts[i*36+12] = (verts[i+X+3]+verts[i+X+6])/2.f;
+			newVerts[i*36+13] = (verts[i+Y+3]+verts[i+Y+6])/2.f;
+			newVerts[i*36+14] = (verts[i+Z+3]+verts[i+Z+6])/2.f;
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+12]*newVerts[i*36+12] + 
+					newVerts[i*36+13]*newVerts[i*36+13] + 
+					newVerts[i*36+14]*newVerts[i*36+14]));
+			
+			// Normalize:
+			newVerts[i*36+12] /= dist;
+			newVerts[i*36+13] /= dist;
+			newVerts[i*36+14] /= dist;
+			
+			// Vertex 3:
+			newVerts[i*36+15] = verts[i+X+6];
+			newVerts[i*36+16] = verts[i+Y+6];
+			newVerts[i*36+17] = verts[i+Z+6];
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+15]*newVerts[i*36+15] + 
+					newVerts[i*36+16]*newVerts[i*36+16] + 
+					newVerts[i*36+17]*newVerts[i*36+17]));
+			
+			// Normalize:
+			newVerts[i*36+15] /= dist;
+			newVerts[i*36+16] /= dist;
+			newVerts[i*36+17] /= dist;
+			
+			/***************************************************************/
 			/*
 			 *  Subdivide Center face:
 			 */
-			newVerts[i*4+6] = (inVerts[i]+inVerts[i+2])/2.f;
-			newVerts[i*4+7] = (inVerts[i]+inVerts[i+1])/2.f;
-			newVerts[i*4+8] = (inVerts[i+1]+inVerts[i+2])/2.f;
+			// Vertex 1:
+			newVerts[i*36+18] = (verts[i+X]+verts[i+X+6])/2.f;
+			newVerts[i*36+19] = (verts[i+Y]+verts[i+Y+6])/2.f;
+			newVerts[i*36+20] = (verts[i+Z]+verts[i+Z+6])/2.f;
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(newVerts[i*4+6]*newVerts[i*4+6] + 
-					newVerts[i*4+7]*newVerts[i*4+7] + 
-					newVerts[i*4+8]*newVerts[i*4+8]));
+			dist = (float) (Math.sqrt(newVerts[i*36+18]*newVerts[i*36+18] + 
+					newVerts[i*36+19]*newVerts[i*36+19] + 
+					newVerts[i*36+20]*newVerts[i*36+20]));
 			
 			// Normalize:
-			newVerts[i*4+6] /= dist;
-			newVerts[i*4+7] /= dist;
-			newVerts[i*4+8] /= dist;
+			newVerts[i*36+18] /= dist;
+			newVerts[i*36+19] /= dist;
+			newVerts[i*36+20] /= dist;
 			
+			// Vertex 2:
+			newVerts[i*36+21] = (verts[i+X+3]+verts[i+X])/2.f;
+			newVerts[i*36+22] = (verts[i+Y+3]+verts[i+Y])/2.f;
+			newVerts[i*36+23] = (verts[i+Z+3]+verts[i+Z])/2.f;
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+21]*newVerts[i*36+21] + 
+					newVerts[i*36+22]*newVerts[i*36+22] + 
+					newVerts[i*36+23]*newVerts[i*36+23]));
+			
+			// Normalize:
+			newVerts[i*36+21] /= dist;
+			newVerts[i*36+22] /= dist;
+			newVerts[i*36+23] /= dist;
+			
+			// Vertex 3:
+			newVerts[i*36+24] = (verts[i+X+3]+verts[i+X+6])/2.f;
+			newVerts[i*36+25] = (verts[i+Y+3]+verts[i+Y+6])/2.f;
+			newVerts[i*36+26] = (verts[i+Z+3]+verts[i+Z+6])/2.f;
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+24]*newVerts[i*36+24] + 
+					newVerts[i*36+25]*newVerts[i*36+25] + 
+					newVerts[i*36+26]*newVerts[i*36+26]));
+			
+			// Normalize:
+			newVerts[i*36+24] /= dist;
+			newVerts[i*36+25] /= dist;
+			newVerts[i*36+26] /= dist;
+			
+			/***************************************************************/
 			/*
 			 *  Subdivide Bottom Right face:
 			 */
-			newVerts[i*4+9] = (inVerts[i]+inVerts[i+1])/2.f;
-			newVerts[i*4+10]= inVerts[i+1];
-			newVerts[i*4+11]= (inVerts[i+1]+inVerts[i+2])/2.f;
+			// Vertex 1:
+			newVerts[i*36+27] = (verts[i+X]+verts[i+X+3])/2.f;
+			newVerts[i*36+28] = (verts[i+Y]+verts[i+Y+3])/2.f;
+			newVerts[i*36+29] = (verts[i+Z]+verts[i+Z+3])/2.f;
 			
 			// Calculate the radius:
-			dist = (float) (Math.sqrt(newVerts[i*4+9]*newVerts[i*4+9] + 
-					newVerts[i*4+10]*newVerts[i*4+10] + 
-					newVerts[i*4+11]*newVerts[i*4+11]));
+			dist = (float) (Math.sqrt(newVerts[i*36+27]*newVerts[i*36+27] + 
+					newVerts[i*36+28]*newVerts[i*36+28] + 
+					newVerts[i*36+29]*newVerts[i*36+29]));
 			
 			// Normalize:
-			newVerts[i*4+9] /= dist;
-			newVerts[i*4+10] /= dist;
-			newVerts[i*4+11] /= dist;
+			newVerts[i*36+27] /= dist;
+			newVerts[i*36+28] /= dist;
+			newVerts[i*36+29] /= dist;
+			
+			// Vertex 2:
+			newVerts[i*36+30] = verts[i+X+3];
+			newVerts[i*36+31] = verts[i+Y+3];
+			newVerts[i*36+32] = verts[i+Z+3];
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+30]*newVerts[i*36+30] + 
+					newVerts[i*36+31]*newVerts[i*36+31] + 
+					newVerts[i*36+32]*newVerts[i*36+32]));
+			
+			// Normalize:
+			newVerts[i*36+30] /= dist;
+			newVerts[i*36+31] /= dist;
+			newVerts[i*36+32] /= dist;
+			
+			// Vertex 3:
+			newVerts[i*36+33] = (verts[i+X+3]+verts[i+X+6])/2.f;
+			newVerts[i*36+34] = (verts[i+Y+3]+verts[i+Y+6])/2.f;
+			newVerts[i*36+35] = (verts[i+Z+3]+verts[i+Z+6])/2.f;
+			
+			// Calculate the radius:
+			dist = (float) (Math.sqrt(newVerts[i*36+33]*newVerts[i*36+33] + 
+					newVerts[i*36+34]*newVerts[i*36+34] + 
+					newVerts[i*36+35]*newVerts[i*36+35]));
+			
+			// Normalize:
+			newVerts[i*36+33] /= dist;
+			newVerts[i*36+34] /= dist;
+			newVerts[i*36+35] /= dist;
 		}
 		
 		return newVerts;

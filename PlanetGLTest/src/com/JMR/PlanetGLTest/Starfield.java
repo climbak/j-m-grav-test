@@ -69,51 +69,51 @@ public class Starfield implements GLDrawable {
 	private FloatBuffer _colors;
 	
 	public Starfield() {
-		Log.d("********************************************","*****************************************");
+		//Log.d("********************************************","*****************************************");
 
 		// Setup Shaders:
 		_vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-		Log.d("Starfield.Starfield$_vertexShader",new Integer(_vertexShader).toString());
+		//Log.d("Starfield.Starfield$_vertexShader",new Integer(_vertexShader).toString());
 		
 		GLES20.glShaderSource(_vertexShader, starVertexShaderCode);
 		GLES20.glCompileShader(_vertexShader);
-		Log.d("Starfield.Starfield$Vertex Shader Info Log",GLES20.glGetShaderInfoLog(_vertexShader));
+		//Log.d("Starfield.Starfield$Vertex Shader Info Log",GLES20.glGetShaderInfoLog(_vertexShader));
 		
 		_fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-		Log.d("Starfield.Starfield$_fragmentShader",new Integer(_fragmentShader).toString());
+		//Log.d("Starfield.Starfield$_fragmentShader",new Integer(_fragmentShader).toString());
 		
 		GLES20.glShaderSource(_fragmentShader, starFragmentShaderCode);
 		GLES20.glCompileShader(_fragmentShader);
 		
-		Log.d("Starfield.Starfield$Fragment Shader Info Log",GLES20.glGetShaderInfoLog(_fragmentShader));
+		//Log.d("Starfield.Starfield$Fragment Shader Info Log",GLES20.glGetShaderInfoLog(_fragmentShader));
 
 		
 		_starProgram = GLES20.glCreateProgram();
 		GLES20.glAttachShader(_starProgram, _vertexShader);
 		GLES20.glAttachShader(_starProgram, _fragmentShader);
 		GLES20.glLinkProgram(_starProgram);
-		Log.d("Starfield.Starfield",GLES20.glGetProgramInfoLog(_starProgram));
+		//Log.d("Starfield.Starfield",GLES20.glGetProgramInfoLog(_starProgram));
 		
-		Log.d("Starfield.Starfield$Program Created:GL_Error",new Integer(GLES20.glGetError()).toString());
-		Log.d("Starfiled.Starfiled$_program:value", new Integer(_starProgram).toString());
+		//Log.d("Starfield.Starfield$Program Created:GL_Error",new Integer(GLES20.glGetError()).toString());
+		//Log.d("Starfiled.Starfiled$_program:value", new Integer(_starProgram).toString());
 	
 		// Get attributes/etc:
 		_position = GLES20.glGetAttribLocation(_starProgram, "position"); // WHY IS THIS RETURNING -1!!!?!
-		Log.d("Starfield.Starfield$_position:GL_Error",new Integer(GLES20.glGetError()).toString());
-		Log.d("Starfield.Starfiled$_position:value", new Integer(_position).toString());
+		//Log.d("Starfield.Starfield$_position:GL_Error",new Integer(GLES20.glGetError()).toString());
+		//Log.d("Starfield.Starfiled$_position:value", new Integer(_position).toString());
 		_color = GLES20.glGetAttribLocation(_starProgram, "color");
-		Log.d("Starfield.Starfiled$_color:value", new Integer(_color).toString());
+		//Log.d("Starfield.Starfiled$_color:value", new Integer(_color).toString());
 		_matrix = GLES20.glGetUniformLocation(_starProgram, "uMVPMatrix");
-		Log.d("Starfield.Starfiled$_matrix:value", new Integer(_matrix).toString());
+		//Log.d("Starfield.Starfiled$_matrix:value", new Integer(_matrix).toString());
 		int[] length = new int[1];
 		int[] size = new int[1];
 		int[] type = new int[1];
 		byte[] name = new byte[50];
 		GLES20.glGetActiveAttrib(_starProgram, 0, 50, length, 0, size, 0, type, 0, name, 0);
 		String attribName = new String(name, 0, length[0]);
-		Log.d("First attribute in program's name length",new Integer(attribName.length()).toString());
-		Log.d("Starfield.Starfield$First Attrib Name", attribName);
-		Log.d("********************************************","*****************************************");
+		//Log.d("First attribute in program's name length",new Integer(attribName.length()).toString());
+		//Log.d("Starfield.Starfield$First Attrib Name", attribName);
+		//Log.d("********************************************","*****************************************");
 		
 		// Create points:
 		float[] points = new float[NUM_STARS*3];
