@@ -100,27 +100,27 @@ public class PlanetDrawable implements GLDrawable{
 		// Add the source code and compile:
 		GLES20.glShaderSource(_v_shader, vertexShader);
 		GLES20.glCompileShader(_v_shader);
-		Log.d("_vertexShader$_v_shader Info Log",GLES20.glGetShaderInfoLog(_v_shader));
+		//Log.d("_vertexShader$_v_shader Info Log",GLES20.glGetShaderInfoLog(_v_shader));
 		
 		_f_shader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
 		
 		GLES20.glShaderSource(_f_shader, fragmentShader);
-		Log.d("GLES20.glShaderSource",new Integer(GLES20.glGetError()).toString());
+		//Log.d("GLES20.glShaderSource",new Integer(GLES20.glGetError()).toString());
 		
 		
 		GLES20.glCompileShader(_f_shader);
-		Log.d("GLES20.glCompileShader",new Integer(GLES20.glGetError()).toString());
+		//Log.d("GLES20.glCompileShader",new Integer(GLES20.glGetError()).toString());
 		
 		
 		_program = GLES20.glCreateProgram();
 		GLES20.glAttachShader(_program, _v_shader);
-		Log.d("GLES20.glAttachShader",new Integer(GLES20.glGetError()).toString());
+		//Log.d("GLES20.glAttachShader",new Integer(GLES20.glGetError()).toString());
 		
 		GLES20.glAttachShader(_program, _f_shader);
-		Log.d("GLES20.glAttachShader",new Integer(GLES20.glGetError()).toString());
+		//Log.d("GLES20.glAttachShader",new Integer(GLES20.glGetError()).toString());
 		
 		GLES20.glLinkProgram(_program);
-		Log.d("GLES20.glLinkProgram",new Integer(GLES20.glGetError()).toString());
+		//Log.d("GLES20.glLinkProgram",new Integer(GLES20.glGetError()).toString());
 		
 		
 		//float [] tri = Sphere.ICOSAHEDRON_VERTICES;
@@ -155,7 +155,7 @@ public class PlanetDrawable implements GLDrawable{
 		_mvp_matrix = GLES20.glGetUniformLocation(_program, "u_MVPMatrix");
 		_color = GLES20.glGetUniformLocation(_program, "a_Color");
 		_normal = GLES20.glGetAttribLocation(_program, "a_Normal");
-		Log.d("GLES20.glGetUniformLocation$u_MVPMatrix", new Integer(GLES20.glGetError()).toString());
+		//Log.d("GLES20.glGetUniformLocation$u_MVPMatrix", new Integer(GLES20.glGetError()).toString());
 		
 		_mv_matrix = GLES20.glGetUniformLocation(_program, "u_MVMatrix");
 	}
