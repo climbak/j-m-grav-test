@@ -12,13 +12,10 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 public class PlanetDrawable implements GLDrawable{
-	private static final String defaultVertexShaderCode = 
-		"uniform mat4 uMVPMatrix;   \n" +
-		"attribute vec4 vPosition; \n" +
-        "void main(){              \n" +
-        " gl_Position = uMVPMatrix * vPosition; \n" +
-        "}                         \n";
-
+	
+	public static float [] light = {0,0,1};
+	
+	
 	final String vertexShader =
 		    "uniform mat4 u_MVPMatrix;      \n"     // A constant representing the combined model/view/projection matrix.
 		  + "uniform mat4 u_MVMatrix;       \n"     // A constant representing the combined model/view matrix.
@@ -42,7 +39,7 @@ public class PlanetDrawable implements GLDrawable{
 		  + "   vec3 lightVector = normalize(u_LightPos - modelViewVertex);        \n"
 		// Calculate the dot product of the light vector and vertex normal. If the normal and light vector are
 		// pointing in the same direction then it will get max illumination.
-		  + "   float diffuse = max(dot(modelViewNormal, lightVector), 1.);       \n"
+		  + "   float diffuse = max(dot(modelViewNormal, lightVector), .5);       \n"
 		// Attenuate the light based on distance.
 		  + "   diffuse = diffuse * (1.0 / (1.0 + (0.25 * distance * distance)));  \n"
 		// Multiply the color by the illumination level. It will be interpolated across the triangle.
@@ -61,12 +58,6 @@ public class PlanetDrawable implements GLDrawable{
 		+ "{                              \n"
 		+ "   gl_FragColor = v_Color;     \n"     // Pass the color directly through the pipeline.
 		+ "}                              \n";
-	
-	private static final String defaultFragmentShaderCode = 
-        "precision mediump float;  \n" +
-        "void main(){              \n" +
-        " gl_FragColor = vec4 (0.23671875, 0.96953125, 0.22265625, 1.0); \n" +
-        "}                         \n";
 	
 	private int _v_shader;
 	private int _f_shader;
@@ -90,12 +81,25 @@ public class PlanetDrawable implements GLDrawable{
 	private int _vert_size;
 	private int _tri_size;
 	
+	private float [] model;
+	
 	public PlanetDrawable(int x, int y, int radius){
 		_x = x;
 		_y = y;
 		_radius = radius;
 		
 		_v_shader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+		
+		model = new float[] {
+				1.f, 0, 0, 0,
+				0, 1.f, 0, 0,
+				0, 0, 1.f, 0,
+				0, 0, 0, 1.f
+		};
+		
+		// Matrix.translateM(model, 0, _x, _y, 0);
+		
+		// Matrix.scaleM(m, mOffset, x, y, z)
 		
 		// Add the source code and compile:
 		GLES20.glShaderSource(_v_shader, vertexShader);
@@ -126,9 +130,15 @@ public class PlanetDrawable implements GLDrawable{
 		//float [] tri = Sphere.ICOSAHEDRON_VERTICES;
 		float [] tri = Sphere.ICOSAHEDRON;
 		tri = Sphere.subdivide(tri);
+		
+		// Matrix.translateM(tri, 0, _x, _y, 0);
+		Matrix.translateM(model, 0, _x, _y, 0);
+		Matrix.scaleM(model, 0, .5f, .5f, .5f);
 		//tri = Sphere.subdivide(tri);
 		byte [] int_arr = Sphere.ICOSAHEDRON_INDICES;
 	
+		
+		
 		_tri_size = tri.length;
 		//Sphere.subdivide(tri, int_arr);
 		
@@ -172,21 +182,13 @@ public class PlanetDrawable implements GLDrawable{
 				0, 0, 0, 1.f
 		};
 		
-		float[] model = new float[] {
-				1.f, 0, 0, 0,
-				0, 1.f, 0, 0,
-				0, 0, 1.f, 0,
-				0, 0, 0, 1.f
-		};
 		
-	
+		//Matrix.scaleM(ident, 0, .3f, .3f, .3f);
+		//Matrix.rotateM(ident, 0, 150, 1, 1, 0);
 		
-		Matrix.scaleM(ident, 0, .3f, .3f, .3f);
-		Matrix.rotateM(ident, 0, 150, 1, 1, 0);
 		float[] result = new float[16];
 		Matrix.multiplyMM(result, 0, sceneMatrix, 0, ident, 0);
-				
-		
+		Matrix.multiplyMM(result, 0, sceneMatrix, 0, model, 0);
 		
 		GLES20.glUniformMatrix4fv(_mvp_matrix, 1, false, result, 0);
 		GLES20.glUniformMatrix4fv(_mv_matrix, 1, false, model, 0);
@@ -197,7 +199,7 @@ public class PlanetDrawable implements GLDrawable{
 		
 		//Log.d("GLES20.glVertexAttribPointer",new Integer(GLES20.glGetError()).toString());
 		
-		GLES20.glUniform3f(_lightpos, 0, 3.f, 0);
+		GLES20.glUniform3f(_lightpos, light[0], light[1], light[2]);
 		GLES20.glUniform4f(_color, 1, 0, 0, 1);
 		
 		GLES20.glEnableVertexAttribArray(_position);

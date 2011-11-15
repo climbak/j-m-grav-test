@@ -30,6 +30,50 @@ public class PlanetTestGLES20SurfaceView extends GLSurfaceView {
 	
 	@Override 
     public boolean onTouchEvent(MotionEvent e) {
-       return false;
+        // MotionEvent reports input details from the touch screen
+        // and other input controls. In this case, you are only
+        // interested in events where the touch position changed.
+
+        float x = e.getX();
+        float y = e.getY();
+        
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+            	
+                float dx = x - mPreviousX;
+                float dy = y - mPreviousY;
+                
+            	if (e.getPointerCount() == 1){
+
+    
+                _renderer.dX = -dx/100;
+                _renderer.dY = -dy/100;
+                
+            	} else {
+                // reverse direction of rotation above the mid-line
+	                if (y > getHeight() / 2) {
+	                  dx = dx * -1 ;
+	                }
+	    
+	                // reverse direction of rotation to left of the mid-line
+	                if (x < getWidth() / 2) {
+	                  dy = dy * -1 ;
+	                }
+	              
+	                _renderer.mAngle += (dx + dy) * TOUCH_SCALE_FACTOR;
+            	}
+            	
+                requestRender();
+                break;
+            case MotionEvent.ACTION_UP:
+            	_renderer.mAngle = 0;
+                _renderer.dX = 0;
+                _renderer.dY = 0;
+                break;
+        }
+
+        mPreviousX = x;
+        mPreviousY = y;
+        return true;
     }
 }

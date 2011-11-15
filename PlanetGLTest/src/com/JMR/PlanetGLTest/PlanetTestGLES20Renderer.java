@@ -35,11 +35,19 @@ public class PlanetTestGLES20Renderer implements Renderer {
     private GLDrawable _background;
     
     public float mAngle;
-	
+	public float dX, dY;
+    
 	@Override
 	public void onDrawFrame(GL10 unused) {
 		// Blank the frame:
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		
+		//Matrix.setIdentityM(_projectionMatrix, 0);
+		Matrix.rotateM(_cameraMatrix, 0, mAngle, 0, 0, 1f);
+		// Matrix.translateM(_cameraMatrix, 0, dX, dY, 0);
+		
+		PlanetDrawable.light[0] += dX;
+		PlanetDrawable.light[2] += dY;
 		
 		_background.draw(_cameraMatrix);
 		
@@ -71,7 +79,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		Log.d("onSurfaceCreated", "called");
 		
         GameBoard.Instance.create();
-        GameBoard.Instance.add(new PlanetDrawable(40, 40, 30));
+        GameBoard.Instance.add(new PlanetDrawable(1, 0, 30));
+        GameBoard.Instance.add(new PlanetDrawable(-1, 0, 30));
 
 	}
 
