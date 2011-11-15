@@ -49,7 +49,7 @@ public class PlanetTestGLES20SurfaceView extends GLSurfaceView {
                 _renderer.dX = -dx/100;
                 _renderer.dY = -dy/100;
                 
-            	} else {
+            	} else if (e.getPointerCount() == 2){
                 // reverse direction of rotation above the mid-line
 	                if (y > getHeight() / 2) {
 	                  dx = dx * -1 ;
@@ -60,13 +60,26 @@ public class PlanetTestGLES20SurfaceView extends GLSurfaceView {
 	                  dy = dy * -1 ;
 	                }
 	              
-	                _renderer.mAngle += (dx + dy) * TOUCH_SCALE_FACTOR;
+	                _renderer.mAngle = (dx + dy) * TOUCH_SCALE_FACTOR;
+            	} else if (e.getPointerCount() == 3){
+                // reverse direction of rotation above the mid-line
+	                if (y > getHeight() / 2) {
+	                  dx = dx * -1 ;
+	                }
+	    
+	                // reverse direction of rotation to left of the mid-line
+	                if (x < getWidth() / 2) {
+	                  dy = dy * -1 ;
+	                }
+	              
+	                _renderer.mAngleZ = (dx + dy) * TOUCH_SCALE_FACTOR;
             	}
             	
                 requestRender();
                 break;
             case MotionEvent.ACTION_UP:
             	_renderer.mAngle = 0;
+            	_renderer.mAngleZ = 0;
                 _renderer.dX = 0;
                 _renderer.dY = 0;
                 break;

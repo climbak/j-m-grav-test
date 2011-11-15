@@ -34,7 +34,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
     
     private GLDrawable _background;
     
-    public float mAngle;
+    public float mAngle, mAngleZ;
 	public float dX, dY;
     
 	@Override
@@ -44,6 +44,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		
 		//Matrix.setIdentityM(_projectionMatrix, 0);
 		Matrix.rotateM(_cameraMatrix, 0, mAngle, 0, 0, 1f);
+		Matrix.rotateM(_cameraMatrix, 0, mAngleZ, 1f, 0, 0);
 		// Matrix.translateM(_cameraMatrix, 0, dX, dY, 0);
 		
 		PlanetDrawable.light[0] += dX;

@@ -130,6 +130,7 @@ public class PlanetDrawable implements GLDrawable{
 		//float [] tri = Sphere.ICOSAHEDRON_VERTICES;
 		float [] tri = Sphere.ICOSAHEDRON;
 		tri = Sphere.subdivide(tri);
+		// tri = Sphere.subdivide(tri);
 		
 		// Matrix.translateM(tri, 0, _x, _y, 0);
 		Matrix.translateM(model, 0, _x, _y, 0);
