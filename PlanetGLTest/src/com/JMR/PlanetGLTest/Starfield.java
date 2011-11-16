@@ -17,7 +17,7 @@ public class Starfield implements GLDrawable {
 		"varying vec4 outColor;                \n" +
         "void main(){                          \n" +
         " outColor = color;                    \n" +
-        " gl_PointSize = 1.5;                  \n" +
+        " gl_PointSize = 2.*color[3];                  \n" +
         " gl_Position = uMVPMatrix * position; \n" +
         "}                                     \n";
 
@@ -189,7 +189,7 @@ public class Starfield implements GLDrawable {
 			}
 						
 			// Pick a random alpha value:
-			colors[i*4+A] = 1.0f; //(float) Math.random();
+			colors[i*4+A] = (float) Math.random();
 		}
 		
 		// Make those arrays into float buffers:

@@ -64,7 +64,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
         Log.d("onSurfaceChanged", "called");
         // this projection matrix is applied to object coodinates
         // in the onDrawFrame() method
-        Matrix.frustumM(_projectionMatrix, 0, -ratio, ratio, -1, 1, 1, 12);
+        Matrix.frustumM(_projectionMatrix, 0, -ratio, ratio, -1, 1, 1, 7);
         Matrix.setLookAtM(_lookAtMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(_cameraMatrix, 0, _projectionMatrix, 0, _lookAtMatrix, 0);
         GameBoard.Instance.viewPortChange(width,height);
