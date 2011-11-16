@@ -3,33 +3,46 @@ package com.JMR.PlanetGLTest;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Random;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 import android.util.Log;
 
 public class Starfield implements GLDrawable {
 	private static final String starVertexShaderCode = 
-		"uniform mat4 uMVPMatrix;   \n" +
-		"attribute vec4 position;   \n" +
-		"attribute vec4 color;      \n" +
-		"varying vec4 outColor;    \n" +
-        "void main(){               \n" +
-        //" gl_FrontColor = vColor;   \n" +
-        //" gl_BackColor = vColor;    \n" +
-        //" gl_Color = vColor;        \n" +
-        " outColor = color;         \n" +
-        " gl_PointSize = 1.5;       \n" +
+		"uniform mat4 uMVPMatrix;              \n" +
+		"attribute vec4 position;              \n" +
+		"attribute vec4 color;                 \n" +
+		"varying vec4 outColor;                \n" +
+        "void main(){                          \n" +
+        " outColor = color;                    \n" +
+        " gl_PointSize = 1.5;                  \n" +
         " gl_Position = uMVPMatrix * position; \n" +
-        "}                          \n";
+        "}                                     \n";
 
 	private static final String starFragmentShaderCode = 
-		//"varying vec4 gl_Color;    \n" +
         "precision mediump float;  \n" +
-        "varying vec4 outColor;         \n" +
+        "varying vec4 outColor;    \n" +
         "void main(){              \n" +
-        //" gl_FragColor = vec4 (1.0, 1.0, 1.0, 1.0); \n" +
         " gl_FragColor = outColor; \n" +
         "}                         \n";
+	
+	private static final String galaxyVertexShaderCode = 
+		"uniform mat4 uMVPMatrix;                 \n" + 
+		"uniform mat4 uMMatrix;                   \n" +
+		"void main() {                            \n" +
+		" gl_Position = uMMatrix * position;      \n" +
+		" gl_Position = uMVPMatrix * gl_Position; \n" +
+		"}                                        \n";
+	
+	private static final String galaxyFragmentShaderCode = 
+		"precision mediump float;                   \n" +
+		"void main(){                               \n" +
+		" gl_FragColor = vec4 (1.0, 0.7, 0.2, 0.1); \n" +
+		"}                                          \n";
+	
+	private static final int NUM_BACKGROUND_GALAXIES = 20;
 	
 	private static final int RED = 0;
 	private static final int YELLOW = 1;
@@ -57,65 +70,73 @@ public class Starfield implements GLDrawable {
 	private static final float MIN_Z = 1.f;
 	private static final float MAX_Z = 3.f;
 	
+	private static final float GALAXY_DISC_Z_SCALE = 0.2f;
+	private static final float GALAXY_BULGE_Z_SCALE = 0.8f;
+	private static final float GALAXY_BULGE_OVERALL_SCALE = 0.4f;
+	
 	private static final int NUM_STARS = 10000;
 	
-	private int _vertexShader;
-	private int _fragmentShader;
+	private int _starVertexShader;
+	private int _starFragmentShader;
+	private int _galaxyVertexShader;
+	private int _galaxyFragmentShader;
 	private int _starProgram;
-	private int _matrix;
-	private int _position;
+	private int _galaxyProgram;
+	private int _sceneMatrix;
+	private int _galaxyModelMatrix;
+	private int _starPosition;
+	private int _galaxyPosition;
 	private int _color;
 	private FloatBuffer _points;
 	private FloatBuffer _colors;
 	
-	public Starfield() {
-		//Log.d("********************************************","*****************************************");
-
-		// Setup Shaders:
-		_vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-		//Log.d("Starfield.Starfield$_vertexShader",new Integer(_vertexShader).toString());
+	private float[] _galaxyPoints;
+	private FloatBuffer _galaxyBuffer;
+	
+	private void setupShaders() {
+		_starVertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
 		
-		GLES20.glShaderSource(_vertexShader, starVertexShaderCode);
-		GLES20.glCompileShader(_vertexShader);
-		//Log.d("Starfield.Starfield$Vertex Shader Info Log",GLES20.glGetShaderInfoLog(_vertexShader));
+		GLES20.glShaderSource(_starVertexShader, starVertexShaderCode);
+		GLES20.glCompileShader(_starVertexShader);
 		
-		_fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-		//Log.d("Starfield.Starfield$_fragmentShader",new Integer(_fragmentShader).toString());
+		_starFragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
 		
-		GLES20.glShaderSource(_fragmentShader, starFragmentShaderCode);
-		GLES20.glCompileShader(_fragmentShader);
-		
-		//Log.d("Starfield.Starfield$Fragment Shader Info Log",GLES20.glGetShaderInfoLog(_fragmentShader));
-
+		GLES20.glShaderSource(_starFragmentShader, starFragmentShaderCode);
+		GLES20.glCompileShader(_starFragmentShader);
 		
 		_starProgram = GLES20.glCreateProgram();
-		GLES20.glAttachShader(_starProgram, _vertexShader);
-		GLES20.glAttachShader(_starProgram, _fragmentShader);
+		GLES20.glAttachShader(_starProgram, _starVertexShader);
+		GLES20.glAttachShader(_starProgram, _starFragmentShader);
 		GLES20.glLinkProgram(_starProgram);
-		//Log.d("Starfield.Starfield",GLES20.glGetProgramInfoLog(_starProgram));
 		
-		//Log.d("Starfield.Starfield$Program Created:GL_Error",new Integer(GLES20.glGetError()).toString());
-		//Log.d("Starfiled.Starfiled$_program:value", new Integer(_starProgram).toString());
-	
+		_galaxyVertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+		
+		GLES20.glShaderSource(_galaxyVertexShader, galaxyVertexShaderCode);
+		GLES20.glCompileShader(_galaxyVertexShader);
+		
+		_galaxyFragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+		
+		GLES20.glShaderSource(_galaxyFragmentShader, galaxyFragmentShaderCode);
+		GLES20.glCompileShader(_galaxyFragmentShader);
+		
+		_galaxyProgram = GLES20.glCreateProgram();
+		GLES20.glAttachShader(_galaxyProgram, _galaxyVertexShader);
+		GLES20.glAttachShader(_galaxyProgram, _galaxyFragmentShader);
+		GLES20.glLinkProgram(_galaxyProgram);
+		
 		// Get attributes/etc:
-		_position = GLES20.glGetAttribLocation(_starProgram, "position"); // WHY IS THIS RETURNING -1!!!?!
-		//Log.d("Starfield.Starfield$_position:GL_Error",new Integer(GLES20.glGetError()).toString());
-		//Log.d("Starfield.Starfiled$_position:value", new Integer(_position).toString());
+		_starPosition = GLES20.glGetAttribLocation(_starProgram, "position"); 
+		_galaxyPosition = GLES20.glGetAttribLocation(_galaxyProgram, "position");
 		_color = GLES20.glGetAttribLocation(_starProgram, "color");
-		//Log.d("Starfield.Starfiled$_color:value", new Integer(_color).toString());
-		_matrix = GLES20.glGetUniformLocation(_starProgram, "uMVPMatrix");
-		//Log.d("Starfield.Starfiled$_matrix:value", new Integer(_matrix).toString());
-		int[] length = new int[1];
-		int[] size = new int[1];
-		int[] type = new int[1];
-		byte[] name = new byte[50];
-		GLES20.glGetActiveAttrib(_starProgram, 0, 50, length, 0, size, 0, type, 0, name, 0);
-		String attribName = new String(name, 0, length[0]);
-		//Log.d("First attribute in program's name length",new Integer(attribName.length()).toString());
-		//Log.d("Starfield.Starfield$First Attrib Name", attribName);
-		//Log.d("********************************************","*****************************************");
+		_sceneMatrix = GLES20.glGetUniformLocation(_starProgram, "uMVPMatrix");
+		_galaxyModelMatrix = GLES20.glGetUniformLocation(_galaxyProgram, "uMMatrix");
+	}
+	
+	public Starfield() {
+		// Setup Shaders:
+		setupShaders();
 		
-		// Create points:
+		// Create starfield points:
 		float[] points = new float[NUM_STARS*3];
 		float[] colors = new float[NUM_STARS*4];
 		int color;
@@ -170,26 +191,92 @@ public class Starfield implements GLDrawable {
 		_colors.put(colors);
 		_colors.position(0);
 		
+		// Create background galaxies geometry:
+		int offs = Sphere.ICOSAHEDRON.length;
+		_galaxyPoints = new float[offs*2];
+		int i;
 		
+		for (i = 0; i < offs; i++)
+		{
+			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i];
+			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE;
+			
+			// Squash:
+			if (i % 3 == 2) // Z point
+			{
+				_galaxyPoints[i] *= GALAXY_DISC_Z_SCALE;
+				_galaxyPoints[i+offs] *= GALAXY_BULGE_Z_SCALE;
+			}
+		}
+		
+		ByteBuffer vbd = ByteBuffer.allocateDirect(_galaxyPoints.length * 4);
+		_galaxyBuffer = vbd.asFloatBuffer();
+		
+		_galaxyBuffer.put(_galaxyPoints);
+		_galaxyBuffer.position(0);
 	}
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
+		// Draw Background Galaxies:
+		GLES20.glDepthFunc(GLES20.GL_ALWAYS);
+		GLES20.glUseProgram(_galaxyProgram);
+		
+		Random rand = new Random(12345);
+		float[] ident = new float[] {
+				1.f, 0, 0, 0,
+				0, 1.f, 0, 0,
+				0, 0, 1.f, 0,
+				0, 0, 0, 1.f
+		};
+		
+		float[] model = new float[ident.length];
+		
+		float[] pos = new float[4];
+		
+		for (int i = 0; i < NUM_BACKGROUND_GALAXIES; i++)
+		{
+			Log.d("Starfield.draw","IN GALAXY LOOP");
+			for (int j = 0; j < ident.length; j++) model[j] = ident[j];
+			
+			// Random orientation:
+			Matrix.rotateM(model, 0, rand.nextFloat()*360.f, rand.nextFloat(), 
+					rand.nextFloat(), rand.nextFloat());
+			
+			// Random offset:
+			pos[0] = (rand.nextFloat() * (MAX_X - MIN_X)) + MIN_X;
+			pos[1] = (rand.nextFloat() * (MAX_Y - MIN_Y)) + MIN_Y;
+			pos[2] = (rand.nextFloat() * (MAX_Z - MIN_Z)) + MIN_Z*2;
+			pos[3] = 0;
+			
+			Matrix.translateM(model, 0, pos[0], pos[1], pos[2]);
+			
+			GLES20.glUniformMatrix4fv(_galaxyModelMatrix, 1, false, model, 0);
+			GLES20.glUniformMatrix4fv(_sceneMatrix, 1, false, sceneMatrix, 0);
+			
+			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 0, _galaxyBuffer);
+			GLES20.glEnableVertexAttribArray(_galaxyPosition);
+			
+			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _galaxyPoints.length);
+		}
+		
+		// Draw Stars:
+		GLES20.glDepthFunc(GLES20.GL_LESS);
 		GLES20.glUseProgram(_starProgram);
 		
-		GLES20.glUniformMatrix4fv(_matrix, 1, false, sceneMatrix, 0);
+		GLES20.glUniformMatrix4fv(_sceneMatrix, 1, false, sceneMatrix, 0);
 
-		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 12, _points);
+		GLES20.glVertexAttribPointer(_starPosition, 3, GLES20.GL_FLOAT, false, 12, _points);
 		GLES20.glVertexAttribPointer(_color, 4, GLES20.GL_FLOAT, false, 16, _colors);
 		
 		// Enable the attribute arrays:
-		GLES20.glEnableVertexAttribArray(_position);
+		GLES20.glEnableVertexAttribArray(_starPosition);
 		GLES20.glEnableVertexAttribArray(_color);
 		
 		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_STARS);
 		
 		// Disable the attribute arrays:
-		GLES20.glDisableVertexAttribArray(_position);
+		GLES20.glDisableVertexAttribArray(_starPosition);
 		GLES20.glDisableVertexAttribArray(_color);
 	}
 
