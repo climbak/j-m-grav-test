@@ -40,10 +40,10 @@ public class Starfield implements GLDrawable {
 	private static final String galaxyFragmentShaderCode = 
 		"precision mediump float;                   \n" +
 		"void main(){                               \n" +
-		" gl_FragColor = vec4 (1.0, 0.7, 0.2, 0.5); \n" +
+		" gl_FragColor = vec4 (1.0, 0.7, 0.2, 1.0); \n" +
 		"}                                          \n";
 	
-	private static final int NUM_BACKGROUND_GALAXIES = 20;
+	private static final int NUM_BACKGROUND_GALAXIES = 50;
 	
 	private static final int RED = 0;
 	private static final int YELLOW = 1;
@@ -143,6 +143,9 @@ public class Starfield implements GLDrawable {
 		_color = GLES20.glGetAttribLocation(_starProgram, "color");
 		_sceneMatrix = GLES20.glGetUniformLocation(_starProgram, "uMVPMatrix");
 		_galaxyModelMatrix = GLES20.glGetUniformLocation(_galaxyProgram, "uMMatrix");
+		
+		Log.d("Starfield.setupShaders$_galaxyModelMatrix", new Integer(_galaxyModelMatrix).toString());
+		Log.d("Starfield.setupShaders$_galaxyPosition", new Integer(_galaxyPosition).toString());
 	}
 	
 	public Starfield() {
@@ -211,8 +214,8 @@ public class Starfield implements GLDrawable {
 		
 		for (i = 0; i < offs; i++)
 		{
-			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i];
-			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE;
+			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i] /2.f;
+			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE /2.f;
 			
 			// Squash:
 			if (i % 3 == 2) // Z point
@@ -266,7 +269,7 @@ public class Starfield implements GLDrawable {
 			GLES20.glUniformMatrix4fv(_galaxyModelMatrix, 1, false, model, 0);
 			GLES20.glUniformMatrix4fv(_sceneMatrix, 1, false, sceneMatrix, 0);
 			
-			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 12, _galaxyBuffer);
+			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 0, _galaxyBuffer);
 			GLES20.glEnableVertexAttribArray(_galaxyPosition);
 			
 			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _galaxyPoints.length);
