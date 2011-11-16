@@ -204,6 +204,7 @@ public class PlanetDrawable implements GLDrawable{
 		GLES20.glUniform4f(_color, 1, 0, 0, 1);
 		
 		GLES20.glEnableVertexAttribArray(_position);
+		GLES20.glEnableVertexAttribArray(_normal);
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _tri_size);
 		//GLES20.glDrawElements(GLES20.GL_TRIANGLES, _tri_size * 3, GLES20.GL_UNSIGNED_BYTE, _int_bb);
