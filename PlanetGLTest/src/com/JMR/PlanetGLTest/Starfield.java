@@ -34,7 +34,6 @@ public class Starfield implements GLDrawable {
 		"attribute vec4 position;                 \n" +
 		"void main() {                            \n" +
 		" gl_Position = uMVPMatrix* (uMMatrix * position);      \n" +
-		//" gl_Position = uMVPMatrix * gl_Position; \n" +
 		"}                                        \n";
 	
 	private static final String galaxyFragmentShaderCode = 
