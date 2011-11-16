@@ -31,6 +31,7 @@ public class Starfield implements GLDrawable {
 	private static final String galaxyVertexShaderCode = 
 		"uniform mat4 uMVPMatrix;                 \n" + 
 		"uniform mat4 uMMatrix;                   \n" +
+		"attribute vec4 position;                 \n" +
 		"void main() {                            \n" +
 		" gl_Position = uMMatrix * position;      \n" +
 		" gl_Position = uMVPMatrix * gl_Position; \n" +
@@ -39,7 +40,7 @@ public class Starfield implements GLDrawable {
 	private static final String galaxyFragmentShaderCode = 
 		"precision mediump float;                   \n" +
 		"void main(){                               \n" +
-		" gl_FragColor = vec4 (1.0, 0.7, 0.2, 0.1); \n" +
+		" gl_FragColor = vec4 (1.0, 0.7, 0.2, 0.5); \n" +
 		"}                                          \n";
 	
 	private static final int NUM_BACKGROUND_GALAXIES = 20;
@@ -114,15 +115,27 @@ public class Starfield implements GLDrawable {
 		GLES20.glShaderSource(_galaxyVertexShader, galaxyVertexShaderCode);
 		GLES20.glCompileShader(_galaxyVertexShader);
 		
+		Log.d("**********","**********");
+		Log.d("**********","**********");
+		Log.d("**********","**********");
+		Log.d("Starfield.setupShaders",GLES20.glGetShaderInfoLog(_galaxyVertexShader));
+		
 		_galaxyFragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
 		
 		GLES20.glShaderSource(_galaxyFragmentShader, galaxyFragmentShaderCode);
 		GLES20.glCompileShader(_galaxyFragmentShader);
 		
+		Log.d("Starfield.setupShaders",GLES20.glGetShaderInfoLog(_galaxyFragmentShader));
+		
 		_galaxyProgram = GLES20.glCreateProgram();
 		GLES20.glAttachShader(_galaxyProgram, _galaxyVertexShader);
 		GLES20.glAttachShader(_galaxyProgram, _galaxyFragmentShader);
 		GLES20.glLinkProgram(_galaxyProgram);
+		
+		Log.d("Starfield.setupShaders",GLES20.glGetProgramInfoLog(_galaxyProgram));
+		Log.d("**********","**********");
+		Log.d("**********","**********");
+		Log.d("**********","**********");
 		
 		// Get attributes/etc:
 		_starPosition = GLES20.glGetAttribLocation(_starProgram, "position"); 
@@ -236,7 +249,6 @@ public class Starfield implements GLDrawable {
 		
 		for (int i = 0; i < NUM_BACKGROUND_GALAXIES; i++)
 		{
-			Log.d("Starfield.draw","IN GALAXY LOOP");
 			for (int j = 0; j < ident.length; j++) model[j] = ident[j];
 			
 			// Random orientation:
@@ -254,7 +266,7 @@ public class Starfield implements GLDrawable {
 			GLES20.glUniformMatrix4fv(_galaxyModelMatrix, 1, false, model, 0);
 			GLES20.glUniformMatrix4fv(_sceneMatrix, 1, false, sceneMatrix, 0);
 			
-			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 0, _galaxyBuffer);
+			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 12, _galaxyBuffer);
 			GLES20.glEnableVertexAttribArray(_galaxyPosition);
 			
 			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _galaxyPoints.length);
