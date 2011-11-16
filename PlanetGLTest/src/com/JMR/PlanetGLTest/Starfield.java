@@ -214,8 +214,8 @@ public class Starfield implements GLDrawable {
 		
 		for (i = 0; i < offs; i++)
 		{
-			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i] /2.f;
-			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE /2.f;
+			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i];
+			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE;
 			
 			// Squash:
 			if (i % 3 == 2) // Z point
