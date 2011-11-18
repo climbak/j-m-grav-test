@@ -33,8 +33,8 @@ public class Starfield implements GLDrawable {
 		"uniform mat4 uMMatrix;                   \n" +
 		"attribute vec4 position;                 \n" +
 		"void main() {                            \n" +
-		//" vec4 modelPosition = position; \n" +
-		" vec4 modelPosition = (uMMatrix * position); \n" +
+		" vec4 modelPosition = position; \n" +
+		//" vec4 modelPosition = (uMMatrix * position); \n" +
 		//" gl_Position = uMVPMatrix* (uMMatrix * position);      \n" +
 		" gl_Position = (uMVPMatrix * modelPosition);     \n" +
 		"}                                        \n";
@@ -212,75 +212,78 @@ public class Starfield implements GLDrawable {
 		_colors.put(colors);
 		_colors.position(0);
 		
-		// Create background galaxies geometry:
-		int offs = Sphere.ICOSAHEDRON.length;
-		_galaxyPoints = new float[offs*2];
-		int i;
+//		// Create background galaxies geometry:
+//		int offs = Sphere.ICOSAHEDRON.length;
+//		_galaxyPoints = new float[offs*2];
+//		int i;
 		
-		for (i = 0; i < offs; i++)
-		{
-			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i];// * GALAXY_OVERALL_SCALE;
-			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE;// * GALAXY_OVERALL_SCALE;
-			
-			// Squash:
-			if (i % 3 == 2) // Z point
-			{
-				_galaxyPoints[i] *= GALAXY_DISC_Z_SCALE;
-				_galaxyPoints[i+offs] *= GALAXY_BULGE_Z_SCALE;
-			}
-		}
-		
-		ByteBuffer vbd = ByteBuffer.allocateDirect(_galaxyPoints.length * 4);
-		_galaxyBuffer = vbd.asFloatBuffer();
-		
-		_galaxyBuffer.put(_galaxyPoints);
-		_galaxyBuffer.position(0);
+//		for (i = 0; i < offs; i++)
+//		{
+//			_galaxyPoints[i] = Sphere.ICOSAHEDRON[i];// * GALAXY_OVERALL_SCALE;
+//			_galaxyPoints[i+offs] = Sphere.ICOSAHEDRON[i] * GALAXY_BULGE_OVERALL_SCALE;// * GALAXY_OVERALL_SCALE;
+//			
+//			// Squash:
+//			if (i % 3 == 2) // Z point
+//			{
+//				_galaxyPoints[i] *= GALAXY_DISC_Z_SCALE;
+//				_galaxyPoints[i+offs] *= GALAXY_BULGE_Z_SCALE;
+//			}
+//		}
+//		
+//		ByteBuffer vbd = ByteBuffer.allocateDirect(_galaxyPoints.length * 4);
+//		_galaxyBuffer = vbd.asFloatBuffer();
+//		
+//		_galaxyBuffer.put(_galaxyPoints);
+//		_galaxyBuffer.position(0);
 	}
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
 		// Draw Background Galaxies:
-		GLES20.glDepthFunc(GLES20.GL_ALWAYS);
-		GLES20.glUseProgram(_galaxyProgram);
+//		GLES20.glDepthFunc(GLES20.GL_ALWAYS);
+//		GLES20.glUseProgram(_galaxyProgram);
+//		
+//		Random rand = new Random(12345);
+//		float[] ident = new float[] {
+//				1.f, 0, 0, 0,
+//				0, 1.f, 0, 0,
+//				0, 0, 1.f, 0,
+//				0, 0, 0, 1.f
+//		};
+//		
+//		float[] model = new float[ident.length];
+//		
+//		float[] pos = new float[4];
+//		float[] result = new float[ident.length];
 		
-		Random rand = new Random(12345);
-		float[] ident = new float[] {
-				1.f, 0, 0, 0,
-				0, 1.f, 0, 0,
-				0, 0, 1.f, 0,
-				0, 0, 0, 1.f
-		};
-		
-		float[] model = new float[ident.length];
-		
-		float[] pos = new float[4];
-		
-		for (int i = 0; i < NUM_BACKGROUND_GALAXIES; i++)
-		{
-			for (int j = 0; j < ident.length; j++) model[j] = ident[j];
-			
-			// Random orientation:
-			//Matrix.rotateM(model, 0, rand.nextFloat()*360.f, 1.f, 
-			//		0, 0);
-			//Matrix.scaleM(model, 0, 0.0002f, 0.0002f, 0.0002f);
-			
-			// Random offset:
-			pos[0] = 0; //(rand.nextFloat() * (MAX_X - MIN_X)/2.f) + MIN_X;
-			pos[1] = 0; //(rand.nextFloat() * (MAX_Y - MIN_Y)/2.f) + MIN_Y;
-			pos[2] = 5;//(rand.nextFloat() * (MAX_Z - MIN_Z)) + MIN_Z*3;
-			pos[3] = 0;
-			
-			//Matrix.translateM(model, 0, pos[0], pos[1], pos[2]);
-			
-			GLES20.glUniformMatrix4fv(_galaxyModelMatrix, 1, false, model, 0);
-			GLES20.glUniformMatrix4fv(_galaxySceneMatrix, 1, false, sceneMatrix, 0);
-			
-			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 12, _galaxyBuffer);
-			GLES20.glEnableVertexAttribArray(_galaxyPosition);
-			
-			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _galaxyPoints.length);
-			GLES20.glFlush();
-		}
+//		for (int i = 0; i < NUM_BACKGROUND_GALAXIES; i++)
+//		{
+//			for (int j = 0; j < ident.length; j++) model[j] = ident[j];
+//			
+//			// Random orientation:
+//			//Matrix.rotateM(model, 0, rand.nextFloat()*360.f, 1.f, 
+//			//		0, 0);
+//			Matrix.scaleM(model, 0, 0.2f, 0.2f, 0.2f);
+//			
+//			// Random offset:
+//			pos[0] = 0; //(rand.nextFloat() * (MAX_X - MIN_X)/2.f) + MIN_X;
+//			pos[1] = 0; //(rand.nextFloat() * (MAX_Y - MIN_Y)/2.f) + MIN_Y;
+//			pos[2] = 5;//(rand.nextFloat() * (MAX_Z - MIN_Z)) + MIN_Z*3;
+//			pos[3] = 0;
+//			
+//			//Matrix.translateM(model, 0, pos[0], pos[1], pos[2]);
+//			
+//			Matrix.multiplyMM(result, 0, model, 0, sceneMatrix, 0);
+//			
+//			GLES20.glUniformMatrix4fv(_galaxyModelMatrix, 1, false, model, 0);
+//			GLES20.glUniformMatrix4fv(_galaxySceneMatrix, 1, false, result, 0);
+//			
+//			GLES20.glVertexAttribPointer(_galaxyPosition, 3, GLES20.GL_FLOAT, false, 12, _galaxyBuffer);
+//			GLES20.glEnableVertexAttribArray(_galaxyPosition);
+//			
+//			GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _galaxyPoints.length);
+//			GLES20.glFlush();
+//		}
 		
 		// Draw Stars:
 		GLES20.glDepthFunc(GLES20.GL_LESS);
