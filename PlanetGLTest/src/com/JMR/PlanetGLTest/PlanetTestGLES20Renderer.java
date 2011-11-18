@@ -37,6 +37,11 @@ public class PlanetTestGLES20Renderer implements Renderer {
     public float mAngle, mAngleZ;
 	public float dX, dY;
     
+	public PlanetTestGLES20Renderer() {
+		super();
+		//_background = new Starfield();
+	}
+	
 	@Override
 	public void onDrawFrame(GL10 unused) {
 		// Blank the frame:
@@ -74,7 +79,23 @@ public class PlanetTestGLES20Renderer implements Renderer {
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set background fill color to black:
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		
+		//GLES20.glEnable(GLES20.GL_TEXTURE_2D);	// Enable texturing
+		//Log.d("Renderer.onSurfaceCreated$Enable_Texturing.error",new Integer(GLES20.glGetError()).toString());
+
+		GLES20.glEnable(GLES20.GL_BLEND);		// Enable blending
+		Log.d("Renderer.onSurfaceCreated$Enable_Blending.error",new Integer(GLES20.glGetError()).toString());
+
+		/*
+		 * The following is equivalent to the below formula:
+		 * final_pixel_color = new_color * 1.0
+		 * This sounds redundant, but it's important to set this by default once
+		 * we enable blending. IF YOU CHANGE THE BLEND FUNC WHEN YOU DRAW YOUR SHIT,
+		 * CHANGE IT THE FUCK BACK SO YOU DON'T SCREW UP EVERYONE ELSE'S SHIT!!
+		 * Seriously. 
+		 */
+		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_SRC_COLOR);
+		Log.d("Renderer.onSurfaceCreated$glBlendFunc.error",new Integer(GLES20.glGetError()).toString());
+
 		_background = new Starfield();
 		
 		Log.d("onSurfaceCreated", "called");

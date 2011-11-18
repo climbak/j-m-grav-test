@@ -10,11 +10,13 @@ import android.view.Window;
 
 public class PlanetGLTestActivity extends Activity {
 	private GLSurfaceView glView;
+	public static PlanetGLTestActivity instance;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         Window window = getWindow();
