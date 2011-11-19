@@ -92,24 +92,24 @@ public class Starfield implements GLDrawable {
 	
 	private int _starVertexShader;
 	private int _starFragmentShader;
-	private int _galaxyVertexShader;
-	private int _galaxyFragmentShader;
+//	private int _galaxyVertexShader;
+//	private int _galaxyFragmentShader;
 	private int _starProgram;
-	private int _galaxyProgram;
+//	private int _galaxyProgram;
 	private int _starSceneMatrix;
-	private int _galaxySceneMatrix;
-	private int _galaxyModelMatrix;
+//	private int _galaxySceneMatrix;
+//	private int _galaxyModelMatrix;
 	private int _starPosition;
-	private int _galaxyPosition;
+//	private int _galaxyPosition;
 	private int _color;
 	private Bitmap _textureMap;
 	private int _texture;
-	private int _textureHandle;
+//	private int _textureHandle;
 	private FloatBuffer _points;
 	private FloatBuffer _colors;
 	
-	private float[] _galaxyPoints;
-	private FloatBuffer _galaxyBuffer;
+//	private float[] _galaxyPoints;
+//	private FloatBuffer _galaxyBuffer;
 	
 	private void setupShaders() {
 		_starVertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
@@ -164,7 +164,7 @@ public class Starfield implements GLDrawable {
 		_starSceneMatrix = GLES20.glGetUniformLocation(_starProgram, "uMVPMatrix");
 //		_galaxyModelMatrix = GLES20.glGetUniformLocation(_galaxyProgram, "uMMatrix");
 //		_galaxySceneMatrix = GLES20.glGetUniformLocation(_galaxyProgram, "uMVPMatrix");
-		_textureHandle = GLES20.glGetUniformLocation(_starProgram, "tex");
+//		_textureHandle = GLES20.glGetUniformLocation(_starProgram, "tex");
 		
 //		Log.d("Starfield.setupShaders$_galaxyModelMatrix", new Integer(_galaxyModelMatrix).toString());
 //		Log.d("Starfield.setupShaders$_galaxyPosition", new Integer(_galaxyPosition).toString());
