@@ -150,6 +150,12 @@ public class ParticleSystem implements GLDrawable {
 		GLES20.glVertexAttribPointer(_colorHandle, 4, GLES20.GL_FLOAT, false, 0, _colorBuffer);
 		GLES20.glVertexAttribPointer(_sizeHandle, 4, GLES20.GL_FLOAT, false, 0, _sizeBuffer);
 		
+		GLES20.glEnableVertexAttribArray(_uMVPMatrixHandle);
+		GLES20.glEnableVertexAttribArray(_colorHandle);
+		GLES20.glEnableVertexAttribArray(_sizeHandle);
+		
+		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, pos.length);
+		
 		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_SRC_COLOR);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 	}
