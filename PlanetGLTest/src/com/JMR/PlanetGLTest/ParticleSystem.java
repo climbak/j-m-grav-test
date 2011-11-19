@@ -1,5 +1,9 @@
 package com.JMR.PlanetGLTest;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -31,8 +35,11 @@ public class ParticleSystem implements GLDrawable {
 	
 	// Particle parameters:
 	public float[] pos;
+	private FloatBuffer _posBuffer; 
 	public float[] size;
+	private FloatBuffer _sizeBuffer;
 	public float[] color;
+	private FloatBuffer _colorBuffer;
 	public long[] age;
 	public int numParticles;
 	
@@ -59,6 +66,18 @@ public class ParticleSystem implements GLDrawable {
 		size = new float[num];
 		color = new float[num * 4];
 		age = new long[num];
+		
+		ByteBuffer vbb = ByteBuffer.allocateDirect(pos.length * 4);
+		vbb.order(ByteOrder.nativeOrder());
+		_posBuffer = vbb.asFloatBuffer();
+		
+		vbb = ByteBuffer.allocateDirect(size.length * 4);
+		vbb.order(ByteOrder.nativeOrder());
+		_sizeBuffer = vbb.asFloatBuffer();
+		
+		vbb = ByteBuffer.allocateDirect(color.length * 4);
+		vbb.order(ByteOrder.nativeOrder());
+		_colorBuffer = vbb.asFloatBuffer();
 		
 		// Compile shaders/etc:
 		_vertexShaderHandle = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
@@ -105,13 +124,34 @@ public class ParticleSystem implements GLDrawable {
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 		
-		// TODO actually create the particles
+		// Particle system behavior wrapper should be responsible for initializing particles.
 	}
 	
 	@Override
 	public void draw(float[] sceneMatrix) {
-		// TODO Autogen.. whatever
+		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+		
+		GLES20.glUseProgram(_programHandle);
+		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _textureHandle);
+		
+		GLES20.glUniformMatrix4fv(_uMVPMatrixHandle, 1, false, sceneMatrix, 0);
 
+		// Put data into buffers:
+		_posBuffer.put(pos);
+		_posBuffer.position(0);
+		_sizeBuffer.put(size);
+		_sizeBuffer.position(0);
+		_colorBuffer.put(color);
+		_colorBuffer.position(0);
+		
+		GLES20.glVertexAttribPointer(_uMVPMatrixHandle, 3, GLES20.GL_FLOAT, false, 0, _posBuffer);
+		GLES20.glVertexAttribPointer(_colorHandle, 4, GLES20.GL_FLOAT, false, 0, _colorBuffer);
+		GLES20.glVertexAttribPointer(_sizeHandle, 4, GLES20.GL_FLOAT, false, 0, _sizeBuffer);
+		
+		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_SRC_COLOR);
+		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 	}
 
 }
