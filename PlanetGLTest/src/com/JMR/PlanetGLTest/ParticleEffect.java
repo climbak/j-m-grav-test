@@ -3,15 +3,15 @@ package com.JMR.PlanetGLTest;
 public abstract class ParticleEffect {
 	public long meanLife;
 	public long lifeJitter;
-	public String particleTexture;
+	public ParticleSystem particleSystem;
 	public long timeStarted;
 	public long prevTime;
 	public boolean isRunning;
 	
-	public ParticleEffect(long meanLife, long lifeJitter, String particleTexture) {
+	public ParticleEffect(long meanLife, long lifeJitter, ParticleSystem particleSystem) {
 		this.meanLife = meanLife;
 		this.lifeJitter = lifeJitter;
-		this.particleTexture = particleTexture;
+		this.particleSystem = particleSystem;
 		this.isRunning = false;
 	}
 	
