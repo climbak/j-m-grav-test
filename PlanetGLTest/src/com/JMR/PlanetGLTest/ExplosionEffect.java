@@ -74,7 +74,7 @@ public class ExplosionEffect extends ParticleEffect {
 			
 			velocities[i*3+0] = (float) (velocity * Math.sin(theta) * Math.cos(phi));
 			velocities[i*3+1] = (float) (velocity * Math.sin(theta) * Math.sin(phi));
-			velocities[i*3+1] = (float) (velocity * Math.cos(theta));
+			velocities[i*3+2] = (float) (velocity * Math.cos(theta));
 		}
 		
 	}
