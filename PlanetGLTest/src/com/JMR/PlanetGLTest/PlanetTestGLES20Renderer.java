@@ -160,7 +160,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
 			_expTestSys.add(foo);
 			_expTestEff.add(bar);
         }
-        Log.d("PlanetTestGLES20Renderer.OnSurfaceCreated$listSize", new Integer(_expTestEff.size()).toString());
+//        Log.d("PlanetTestGLES20Renderer.OnSurfaceCreated$listSize", new Integer(_expTestEff.size()).toString());
         
 //        _expTestSys = new ParticleSystem(3000, "particle_tex2");
 //        _expTestEff = new ExplosionEffect(2000,250,_expTestSys,new float[]{0,0},250);

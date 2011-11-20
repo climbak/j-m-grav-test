@@ -338,7 +338,9 @@ public class Starfield implements GLDrawable {
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _texture);
 		
-		GLES20.glUniformMatrix4fv(_starSceneMatrix, 1, false, sceneMatrix, 0);
+		float[] mat = sceneMatrix;
+		
+		GLES20.glUniformMatrix4fv(_starSceneMatrix, 1, false, mat, 0);
 
 		GLES20.glVertexAttribPointer(_starPosition, 3, GLES20.GL_FLOAT, false, 12, _points);
 		GLES20.glVertexAttribPointer(_color, 4, GLES20.GL_FLOAT, false, 16, _colors);
