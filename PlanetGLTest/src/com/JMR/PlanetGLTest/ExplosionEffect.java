@@ -63,7 +63,6 @@ public class ExplosionEffect extends ParticleEffect {
 			velocities[i*3+2] *= this.radius/((float)this.meanLife);
 		}
 		
-		this.numLive = this.particleSystem.numParticles;
 	}
 	
 	@Override

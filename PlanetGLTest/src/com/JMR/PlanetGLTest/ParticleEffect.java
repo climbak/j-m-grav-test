@@ -21,11 +21,19 @@ public abstract class ParticleEffect {
 		this.timeStarted = System.currentTimeMillis();
 		this.prevTime = this.timeStarted;
 		this.isRunning = true;
+		this.numLive = this.particleSystem.numParticles;
 	}
 	public void stop() {
 		this.timeStarted = -1l;
 		this.prevTime = -1l;
+		this.numLive = 0;
 		this.isRunning = false;
+		
+		// Make sure the particles don't render:
+		for (int i = 0; i < this.particleSystem.numParticles; i++)
+		{
+			this.particleSystem.size[i] = 0.f;
+		}
 	}
 	public abstract void update();
 }
