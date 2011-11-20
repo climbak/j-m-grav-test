@@ -92,17 +92,17 @@ public class PlanetTestGLES20Renderer implements Renderer {
         	sys.draw(_cameraMatrix);
         }
 	    
-        i = sysToRemove.iterator();
-        while(i.hasNext())
-        {
-        	_expTestSys.remove(i.next());
-        }
-        
-        e = effToRemove.iterator();
-        while(e.hasNext())
-        {
-        	_expTestEff.remove(e.next());
-        }
+//        i = sysToRemove.iterator();
+//        while(i.hasNext())
+//        {
+//        	_expTestSys.remove(i.next());
+//        }
+//        
+//        e = effToRemove.iterator();
+//        while(e.hasNext())
+//        {
+//        	_expTestEff.remove(e.next());
+//        }
 //        _expTestEff.update();
 //        _expTestSys.draw(_cameraMatrix);
 	}
