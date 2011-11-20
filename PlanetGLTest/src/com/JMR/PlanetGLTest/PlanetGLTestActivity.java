@@ -22,6 +22,8 @@ public class PlanetGLTestActivity extends Activity {
         Window window = getWindow();
         window.setFormat(PixelFormat.RGBA_8888);
         
+        Geometry.Instance.setContext(this);
+        
         glView = new PlanetTestGLES20SurfaceView(this);
         
         setContentView(glView);

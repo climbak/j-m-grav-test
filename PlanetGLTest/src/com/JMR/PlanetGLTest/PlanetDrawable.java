@@ -74,11 +74,9 @@ public class PlanetDrawable implements GLDrawable{
 	private int _lightpos;
 	private int _color;
 	
-	private FloatBuffer _tri_vb;
-	private ByteBuffer _int_bb; 
-	private FloatBuffer _col_fb;
+	private FloatBuffer _vert_vb;
+	private FloatBuffer _norm_vb;
 	
-	private int _vert_size;
 	private int _tri_size;
 	
 	private float [] model;
@@ -130,38 +128,18 @@ public class PlanetDrawable implements GLDrawable{
 		//float [] tri = Sphere.ICOSAHEDRON_VERTICES;
 		float [] tri = Sphere.ICOSAHEDRON;
 		tri = Sphere.subdivide(tri);
-		// tri = Sphere.subdivide(tri);
-		
-		// Matrix.translateM(tri, 0, _x, _y, 0);
-		Matrix.translateM(model, 0, _x, _y, 0);
-		Matrix.scaleM(model, 0, .5f, .5f, .5f);
-		//tri = Sphere.subdivide(tri);
-		byte [] int_arr = Sphere.ICOSAHEDRON_INDICES;
-	
-		
-		
-		_tri_size = tri.length;
-		//Sphere.subdivide(tri, int_arr);
-		
-		_vert_size = tri.length / 3;
-		
-		ByteBuffer vbb = ByteBuffer.allocateDirect(tri.length * Float.SIZE); // 4 bytes per float or something
-		vbb.order(ByteOrder.nativeOrder());
-		_tri_vb = vbb.asFloatBuffer();
-		
-		_tri_vb.put(tri);
-		_tri_vb.position(0);
-		
-		
-		
-		ByteBuffer ibb = ByteBuffer.allocate(int_arr.length * Byte.SIZE);
-		
-		ibb.order(ByteOrder.nativeOrder());
-		_int_bb = ibb; // ibb.asShortBuffer();
-		
-		_int_bb.put(int_arr);
-		_int_bb.position(0);
 
+		// Matrix.translateM(tri, 0, _x, _y, 0);
+		Matrix.translateM(model, 0, _x, _y, -1);
+		Matrix.scaleM(model, 0, .03f, .03f, .03f);
+
+
+		
+		_vert_vb = Geometry.Instance.getVertices(com.JMR.PlanetGLTest.R.raw.missile_test);
+		_norm_vb = Geometry.Instance.getNormals(com.JMR.PlanetGLTest.R.raw.missile_test);
+		
+		_tri_size =  Geometry.Instance.getVertCount(com.JMR.PlanetGLTest.R.raw.missile_test);
+		
 		_position = GLES20.glGetAttribLocation(_program, "a_Position");
 		_lightpos = GLES20.glGetUniformLocation(_program, "u_LightPos");
 		_mvp_matrix = GLES20.glGetUniformLocation(_program, "u_MVPMatrix");
@@ -182,22 +160,18 @@ public class PlanetDrawable implements GLDrawable{
 				0, 0, 0, 1.f
 		};
 		
-		
-		//Matrix.scaleM(ident, 0, .3f, .3f, .3f);
-		//Matrix.rotateM(ident, 0, 150, 1, 1, 0);
-		
 		float[] result = new float[16];
 		Matrix.multiplyMM(result, 0, sceneMatrix, 0, ident, 0);
 		Matrix.multiplyMM(result, 0, sceneMatrix, 0, model, 0);
 		
 		GLES20.glUniformMatrix4fv(_mvp_matrix, 1, false, result, 0);
 		GLES20.glUniformMatrix4fv(_mv_matrix, 1, false, model, 0);
-		//Log.d("GLES20.glUniformMatrix4fv$_mv_matrix",new Integer(GLES20.glGetError()).toString());
+		// Log.d("GLES20.glUniformMatrix4fv$_mv_matrix",new Integer(GLES20.glGetError()).toString());
 		
-		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 0, _tri_vb);
-		GLES20.glVertexAttribPointer(_normal, 3, GLES20.GL_FLOAT, false, 0, _tri_vb);
+		GLES20.glVertexAttribPointer(_position, 3, GLES20.GL_FLOAT, false, 0, _vert_vb);
+		GLES20.glVertexAttribPointer(_normal, 3, GLES20.GL_FLOAT, false, 0, _vert_vb);
 		
-		//Log.d("GLES20.glVertexAttribPointer",new Integer(GLES20.glGetError()).toString());
+		// Log.d("GLES20.glVertexAttribPointer",new Integer(GLES20.glGetError()).toString());
 		
 		GLES20.glUniform3f(_lightpos, light[0], light[1], light[2]);
 		GLES20.glUniform4f(_color, 1, 0, 0, 1);
@@ -206,7 +180,6 @@ public class PlanetDrawable implements GLDrawable{
 		GLES20.glEnableVertexAttribArray(_normal);
 		
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, _tri_size);
-		//GLES20.glDrawElements(GLES20.GL_TRIANGLES, _tri_size * 3, GLES20.GL_UNSIGNED_BYTE, _int_bb);
 
 		//Log.d("PlanetDrawable.draw_after",new Integer(GLES20.glGetError()).toString());
 		

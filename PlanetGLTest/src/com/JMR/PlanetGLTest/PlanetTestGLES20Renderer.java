@@ -145,8 +145,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		Log.d("onSurfaceCreated", "called");
 		
         GameBoard.Instance.create();
-        GameBoard.Instance.add(new PlanetDrawable(1, 0, 30));
-        GameBoard.Instance.add(new PlanetDrawable(-1, 0, 30));
+        GameBoard.Instance.add(new PlanetDrawable(0, 0, 30));
+        //GameBoard.Instance.add(new PlanetDrawable(-1, 0, 30));
 
         _expTestSys = new LinkedList<ParticleSystem>();
         _expTestEff = new LinkedList<ParticleEffect>();
