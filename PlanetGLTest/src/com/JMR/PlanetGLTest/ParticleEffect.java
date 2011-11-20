@@ -7,12 +7,14 @@ public abstract class ParticleEffect {
 	public long timeStarted;
 	public long prevTime;
 	public boolean isRunning;
+	public long numLive;
 	
 	public ParticleEffect(long meanLife, long lifeJitter, ParticleSystem particleSystem) {
 		this.meanLife = meanLife;
 		this.lifeJitter = lifeJitter;
 		this.particleSystem = particleSystem;
 		this.isRunning = false;
+		this.numLive = 0l;
 	}
 	
 	public void start() {

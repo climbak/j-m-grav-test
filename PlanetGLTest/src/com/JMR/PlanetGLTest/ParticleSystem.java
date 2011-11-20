@@ -41,6 +41,7 @@ public class ParticleSystem implements GLDrawable {
 	public float[] color;
 	private FloatBuffer _colorBuffer;
 	public long[] age;
+	public long[] life;		// Max age
 	public int numParticles;
 	
 	// Handles to shader variables:
@@ -66,6 +67,7 @@ public class ParticleSystem implements GLDrawable {
 		size = new float[num];
 		color = new float[num * 4];
 		age = new long[num];
+		life = new long[num];
 		
 		ByteBuffer vbb = ByteBuffer.allocateDirect(pos.length * 4);
 		vbb.order(ByteOrder.nativeOrder());
