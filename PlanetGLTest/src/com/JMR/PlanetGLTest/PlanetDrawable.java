@@ -125,15 +125,10 @@ public class PlanetDrawable implements GLDrawable{
 		//Log.d("GLES20.glLinkProgram",new Integer(GLES20.glGetError()).toString());
 		
 		
-		//float [] tri = Sphere.ICOSAHEDRON_VERTICES;
-		float [] tri = Sphere.ICOSAHEDRON;
-		tri = Sphere.subdivide(tri);
-
+		
 		// Matrix.translateM(tri, 0, _x, _y, 0);
 		Matrix.translateM(model, 0, _x, _y, -1);
-		Matrix.scaleM(model, 0, .03f, .03f, .03f);
-
-
+		Matrix.scaleM(model, 0, .01f, .01f, .01f);
 		
 		_vert_vb = Geometry.Instance.getVertices(com.JMR.PlanetGLTest.R.raw.missile_test);
 		_norm_vb = Geometry.Instance.getNormals(com.JMR.PlanetGLTest.R.raw.missile_test);
