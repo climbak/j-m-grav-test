@@ -17,7 +17,6 @@ public class GameBoard implements GLDrawable {
 		
 	}
 	
-	@Override
 	public void draw(float[] sceneMatrix) {
 		Iterator<GLDrawable> iter = stuffToDraw.iterator();
 		

@@ -50,8 +50,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		super();
 		//_background = new Starfield();
 	}
-	
-	@Override
+
 	public void onDrawFrame(GL10 unused) {
 		// Blank the frame:
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -107,7 +106,6 @@ public class PlanetTestGLES20Renderer implements Renderer {
 //        _expTestSys.draw(_cameraMatrix);
 	}
 
-	@Override
 	public void onSurfaceChanged(GL10 unused, int width, int height) {
 		// Update the GL viewport:
 		GLES20.glViewport(0, 0, width, height);
@@ -122,7 +120,6 @@ public class PlanetTestGLES20Renderer implements Renderer {
         GameBoard.Instance.viewPortChange(width,height);
 	}
 
-	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set background fill color to black:
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

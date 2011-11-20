@@ -172,7 +172,6 @@ public class PlanetDrawable implements GLDrawable{
 		_mv_matrix = GLES20.glGetUniformLocation(_program, "u_MVMatrix");
 	}
 	
-	@Override
 	public void draw(float[] sceneMatrix) {
 		GLES20.glUseProgram(_program);
 		

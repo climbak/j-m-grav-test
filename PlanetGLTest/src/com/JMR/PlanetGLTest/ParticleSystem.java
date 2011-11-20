@@ -137,7 +137,6 @@ public class ParticleSystem implements GLDrawable {
 		// Particle system behavior wrapper should be responsible for initializing particles.
 	}
 	
-	@Override
 	public void draw(float[] sceneMatrix) {
 		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);

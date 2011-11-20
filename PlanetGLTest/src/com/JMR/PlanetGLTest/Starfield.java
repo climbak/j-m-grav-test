@@ -275,7 +275,6 @@ public class Starfield implements GLDrawable {
 //		_galaxyBuffer.position(0);
 	}
 	
-	@Override
 	public void draw(float[] sceneMatrix) {
 		// Draw Background Galaxies:
 //		GLES20.glDepthFunc(GLES20.GL_ALWAYS);
