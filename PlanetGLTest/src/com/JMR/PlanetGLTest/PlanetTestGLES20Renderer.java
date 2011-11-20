@@ -33,6 +33,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
     private float[] _projectionMatrix = new float[16];
     
     private GLDrawable _background;
+    private ParticleSystem _expTestSys;
+    private ParticleEffect _expTestEff;
     
     public float mAngle, mAngleZ;
 	public float dX, dY;
@@ -58,6 +60,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		_background.draw(_cameraMatrix);
 		
         GameBoard.Instance.draw(_cameraMatrix);
+        _expTestEff.update();
+        _expTestSys.draw(_cameraMatrix);
 	}
 
 	@Override
@@ -104,6 +108,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
         GameBoard.Instance.add(new PlanetDrawable(1, 0, 30));
         GameBoard.Instance.add(new PlanetDrawable(-1, 0, 30));
 
+        _expTestSys = new ParticleSystem(3000, "particle_tex2");
+        _expTestEff = new ExplosionEffect(2000,250,_expTestSys,new float[]{0,0},250);
 	}
 
 	// Helper method to take shader code and compile it.
@@ -116,5 +122,10 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		GLES20.glCompileShader(shader);
 		
 		return shader;
+	}
+
+	public void tap(float x, float y) {
+		this._expTestEff.setCenter(x, y);
+		this._expTestEff.start();
 	}
 }

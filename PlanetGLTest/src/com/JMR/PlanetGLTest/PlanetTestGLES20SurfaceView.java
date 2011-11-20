@@ -82,6 +82,11 @@ public class PlanetTestGLES20SurfaceView extends GLSurfaceView {
             	_renderer.mAngleZ = 0;
                 _renderer.dX = 0;
                 _renderer.dY = 0;
+                
+                if (x - mPreviousX < 0.01 && y - mPreviousY < 0.01) // Tap?
+                {
+                	_renderer.tap(x, y);
+                }
                 break;
         }
 

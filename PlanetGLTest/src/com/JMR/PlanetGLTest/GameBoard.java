@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import android.opengl.Matrix;
 
 public class GameBoard implements GLDrawable {
+	public int width, height;
 	public static final GameBoard Instance = new GameBoard();
 	
 	public LinkedList<GLDrawable> stuffToDraw = new LinkedList<GLDrawable>();
@@ -27,7 +28,8 @@ public class GameBoard implements GLDrawable {
 	}
 
 	public void viewPortChange(int width, int height) {
-		// TODO Auto-generated method stub
+		this.width = width;
+		this.height = height;
 	}
 
 	public void add(GLDrawable drawable){

@@ -63,6 +63,9 @@ public class ParticleSystem implements GLDrawable {
 	public ParticleSystem(int num, String textureFile) {
 		numParticles = num;
 		
+		Log.d("*****************************************","******************************");
+		Log.d("ParticleSystem.ParticleSystem$textureFile",textureFile);
+		
 		pos = new float[num * 3];
 		size = new float[num];
 		color = new float[num * 4];
@@ -109,12 +112,15 @@ public class ParticleSystem implements GLDrawable {
 		Resources res = PlanetGLTestActivity.instance.getResources();
 		_textureMap = ((BitmapDrawable)res.getDrawable(res.getIdentifier(textureFile, "drawable",
 				"com.JMR.PlanetGLTest"))).getBitmap();
+		
+//		Log.d("ParticleSystem.ParticleSystem$_textureMap.Height",new Integer(_textureMap.getHeight()).toString());
+		
 		int[] temp = new int[1];
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		Log.d("Starfield:Starfield$glGenTextures.error",new Integer(GLES20.glGetError()).toString());
+//		Log.d("Starfield:Starfield$glGenTextures.error",new Integer(GLES20.glGetError()).toString());
 
 		GLES20.glGenTextures(1, temp, 0);
-		Log.d("Starfield:Starfield$glGenTextures.error",new Integer(GLES20.glGetError()).toString());
+//		Log.d("Starfield:Starfield$glGenTextures.error",new Integer(GLES20.glGetError()).toString());
 		_textureHandle = temp[0];
 		
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, _textureHandle);
@@ -125,6 +131,8 @@ public class ParticleSystem implements GLDrawable {
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
 		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+		
+//		Log.d("Starfield:Starfield$endOfFunction.error",new Integer(GLES20.glGetError()).toString());
 		
 		// Particle system behavior wrapper should be responsible for initializing particles.
 	}
@@ -141,12 +149,17 @@ public class ParticleSystem implements GLDrawable {
 		GLES20.glUniformMatrix4fv(_uMVPMatrixHandle, 1, false, sceneMatrix, 0);
 
 		// Put data into buffers:
+		_posBuffer.position(0);
 		_posBuffer.put(pos);
 		_posBuffer.position(0);
+		_sizeBuffer.position(0);
 		_sizeBuffer.put(size);
 		_sizeBuffer.position(0);
+		_colorBuffer.position(0);
 		_colorBuffer.put(color);
 		_colorBuffer.position(0);
+//		Log.d("ParticleSystem.draw$size", new Float(size[0]).toString());
+//		Log.d("ParticleSystem.draw$pos.x", new Float(pos[0]).toString());
 		
 		GLES20.glVertexAttribPointer(_uMVPMatrixHandle, 3, GLES20.GL_FLOAT, false, 0, _posBuffer);
 		GLES20.glVertexAttribPointer(_colorHandle, 4, GLES20.GL_FLOAT, false, 0, _colorBuffer);
