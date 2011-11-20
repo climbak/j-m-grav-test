@@ -82,6 +82,8 @@ public class ExplosionEffect extends ParticleEffect {
 	@Override
 	public void update() {
 //		Log.d("ExplosionEffect.update","Update Called");
+		Random r = new Random();
+		
 		if (!this.isRunning) return;
 		if (this.numLive == 0)
 		{
@@ -113,6 +115,7 @@ public class ExplosionEffect extends ParticleEffect {
 //			Log.d("ExplosionEffect.update$velocity.x", new Float(this.velocities[i*3+0]).toString());
 			this.particleSystem.pos[i*3+1] += this.velocities[i*3+1]*deltaT;	// Y
 			this.particleSystem.pos[i*3+2] += this.velocities[i*3+2]*deltaT;	// Z
+			
 		}
 		
 		this.prevTime = currTime;

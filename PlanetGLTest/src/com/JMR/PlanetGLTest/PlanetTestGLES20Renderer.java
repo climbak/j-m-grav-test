@@ -3,6 +3,8 @@ package com.JMR.PlanetGLTest;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -15,6 +17,7 @@ import android.util.Log;
 
 public class PlanetTestGLES20Renderer implements Renderer {
 	// This is just a sort of fallback, we should probably write our shaders in separate files:
+	public static final int NUM_BOOMS = 10;
 	private static final String defaultVertexShaderCode = 
 		"uniform mat4 uMVPMatrix;   \n" +
 		"attribute vec4 vPosition; \n" +
@@ -33,11 +36,15 @@ public class PlanetTestGLES20Renderer implements Renderer {
     private float[] _projectionMatrix = new float[16];
     
     private GLDrawable _background;
-    private ParticleSystem _expTestSys;
-    private ParticleEffect _expTestEff;
+//    private ParticleSystem _expTestSys;
+//    private ParticleEffect _expTestEff;
+    private LinkedList<ParticleSystem> _expTestSys;
+    private LinkedList<ParticleEffect> _expTestEff;
     
     public float mAngle, mAngleZ;
 	public float dX, dY;
+	
+	public int currBoom;
     
 	public PlanetTestGLES20Renderer() {
 		super();
@@ -60,8 +67,44 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		_background.draw(_cameraMatrix);
 		
         GameBoard.Instance.draw(_cameraMatrix);
-        _expTestEff.update();
-        _expTestSys.draw(_cameraMatrix);
+        
+        
+        Iterator<ParticleSystem> i = _expTestSys.iterator();
+        Iterator<ParticleEffect> e = _expTestEff.iterator();
+        LinkedList<ParticleSystem> sysToRemove = new LinkedList<ParticleSystem>();
+        LinkedList<ParticleEffect> effToRemove = new LinkedList<ParticleEffect>();
+        ParticleSystem sys;
+        ParticleEffect eff;
+        while(i.hasNext())
+        {
+        	sys = i.next();
+        	eff = e.next();
+        	
+        	if (!eff.isRunning)
+        	{
+        		sysToRemove.add(sys);
+        		effToRemove.add(eff);
+//        		_expTestEff.remove(eff);
+//        		_expTestSys.remove(sys);
+        		continue;
+        	}
+        	eff.update();
+        	sys.draw(_cameraMatrix);
+        }
+	    
+        i = sysToRemove.iterator();
+        while(i.hasNext())
+        {
+        	_expTestSys.remove(i.next());
+        }
+        
+        e = effToRemove.iterator();
+        while(e.hasNext())
+        {
+        	_expTestEff.remove(e.next());
+        }
+//        _expTestEff.update();
+//        _expTestSys.draw(_cameraMatrix);
 	}
 
 	@Override
@@ -108,8 +151,22 @@ public class PlanetTestGLES20Renderer implements Renderer {
         GameBoard.Instance.add(new PlanetDrawable(1, 0, 30));
         GameBoard.Instance.add(new PlanetDrawable(-1, 0, 30));
 
-        _expTestSys = new ParticleSystem(3000, "particle_tex2");
-        _expTestEff = new ExplosionEffect(2000,250,_expTestSys,new float[]{0,0},250);
+        _expTestSys = new LinkedList<ParticleSystem>();
+        _expTestEff = new LinkedList<ParticleEffect>();
+        
+        currBoom = 0;
+        
+        for (int i = 0; i < NUM_BOOMS; i++)
+        {
+	        ParticleSystem foo = new ParticleSystem(3000, "particle_tex2");
+			ParticleEffect bar = new ExplosionEffect(2000,250,foo,new float[]{0,0},250);
+			_expTestSys.add(foo);
+			_expTestEff.add(bar);
+        }
+        Log.d("PlanetTestGLES20Renderer.OnSurfaceCreated$listSize", new Integer(_expTestEff.size()).toString());
+        
+//        _expTestSys = new ParticleSystem(3000, "particle_tex2");
+//        _expTestEff = new ExplosionEffect(2000,250,_expTestSys,new float[]{0,0},250);
 	}
 
 	// Helper method to take shader code and compile it.
@@ -125,7 +182,13 @@ public class PlanetTestGLES20Renderer implements Renderer {
 	}
 
 	public void tap(float x, float y) {
-		this._expTestEff.setCenter(x, y);
-		this._expTestEff.start();
+		Log.d("PlanetTestGLES20Renderer.tap$currBoom", new Integer(currBoom).toString());
+        Log.d("PlanetTestGLES20Renderer.tap$listSize", new Integer(_expTestEff.size()).toString());
+
+		ParticleEffect bar = _expTestEff.get(currBoom);
+		bar.setCenter(x, y);
+		bar.start();
+		currBoom++;
+		if (currBoom >= NUM_BOOMS) currBoom = 0;
 	}
 }
