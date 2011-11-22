@@ -31,9 +31,9 @@ public class PlanetTestGLES20Renderer implements Renderer {
         " gl_FragColor = vec4 (0.63671875, 0.76953125, 0.22265625, 1.0); \n" +
         "}                         \n";
 	
-    private float[] _cameraMatrix = new float[16];
-    private float[] _lookAtMatrix = new float[16];
-    private float[] _projectionMatrix = new float[16];
+    public float[] _viewProjectionMatrix = new float[16];
+    public float[] _viewMatrix = new float[16];
+    public float[] _projectionMatrix = new float[16];
     
     private GLDrawable _background;
 //    private ParticleSystem _expTestSys;
@@ -56,16 +56,17 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 		
 		//Matrix.setIdentityM(_projectionMatrix, 0);
-		Matrix.rotateM(_cameraMatrix, 0, mAngle, 0, 0, 1f);
-		Matrix.rotateM(_cameraMatrix, 0, mAngleZ, 1f, 0, 0);
+		///Matrix.rotateM(_viewProjectionMatrix, 0, mAngle, 0, 0, 1f);
+		///Matrix.rotateM(_viewProjectionMatrix, 0, mAngleZ, 1f, 0, 0);
 		// Matrix.translateM(_cameraMatrix, 0, dX, dY, 0);
+		Camera.instance.rotate(mAngleZ, 0.f, mAngle);
 		
 		PlanetDrawable.light[0] += dX;
 		PlanetDrawable.light[2] += dY;
 		
-		_background.draw(_cameraMatrix);
+		_background.draw(Camera.instance.mViewProjectionMatrix);
 		
-        GameBoard.Instance.draw(_cameraMatrix);
+        GameBoard.Instance.draw(Camera.instance.mViewProjectionMatrix);
         
         
         Iterator<ParticleSystem> i = _expTestSys.iterator();
@@ -88,7 +89,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
         		continue;
         	}
         	eff.update();
-        	sys.draw(_cameraMatrix);
+        	sys.draw(Camera.instance.mViewProjectionMatrix);
         }
 	    
 //        i = sysToRemove.iterator();
@@ -110,13 +111,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		// Update the GL viewport:
 		GLES20.glViewport(0, 0, width, height);
 		
-		float ratio = (float) width / height;
-        Log.d("onSurfaceChanged", "called");
-        // this projection matrix is applied to object coodinates
-        // in the onDrawFrame() method
-        Matrix.frustumM(_projectionMatrix, 0, -ratio, ratio, -1, 1, 1, 7);
-        Matrix.setLookAtM(_lookAtMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        Matrix.multiplyMM(_cameraMatrix, 0, _projectionMatrix, 0, _lookAtMatrix, 0);
+		Camera.instance.frame(width, height);
         GameBoard.Instance.viewPortChange(width,height);
 	}
 

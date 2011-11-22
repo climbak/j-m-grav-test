@@ -11,6 +11,10 @@ public class Camera {
 	public static final float[] START_LOOK = {0.f, 0.f, 0.f};
 	public static final float[] START_UP = {0.f, 1.f, 0.f};
 	
+	public static final float DEFAULT_NEAR_CLIP = 1.f;
+	public static final float DEFAULT_TOP_CLIP = 1.f;
+	public static final float DEFAULT_FAR_CLIP = 7.f;
+	
 	public static Camera instance = new Camera();
 	
 	public float[] mViewProjectionMatrix = new float[16];
@@ -18,6 +22,9 @@ public class Camera {
     public float[] mProjectionMatrix = new float[16];
 	
     public float ratio;
+    public float nearClip;
+    public float farClip;
+    public float topClip;
     public float[] location;
     public float[] lookingAt;
     public float[] up;
@@ -25,10 +32,26 @@ public class Camera {
 	private Camera() {
 		ratio = 1.f;
 		
-		Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 1, 7);
-		Matrix.setLookAtM(mViewMatrix, 0, START_LOC[X], START_LOC[Y], START_LOC[Z], 
-				START_LOOK[X], START_LOOK[Y], START_LOOK[Z], 
-				START_UP[X], START_UP[Y], START_UP[Z]);
+		nearClip = DEFAULT_NEAR_CLIP;
+		farClip = DEFAULT_FAR_CLIP;
+		topClip = DEFAULT_TOP_CLIP;
+		
+		location[X] = START_LOC[X];
+		location[Y] = START_LOC[Y];
+		location[Z] = START_LOC[Z];
+		
+		lookingAt[X] = START_LOOK[X];
+		lookingAt[Y] = START_LOOK[Y];
+		lookingAt[Z] = START_LOOK[Z];
+		
+		up[X] = START_UP[X];
+		up[Y] = START_UP[Y];
+		up[Z] = START_UP[Z];
+		
+		Matrix.frustumM(mProjectionMatrix, 0, -ratio*topClip, ratio*topClip, -topClip, topClip, nearClip, farClip);
+		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z], 
+				lookingAt[X], lookingAt[Y], lookingAt[Z], 
+				up[X], up[Y], up[Z]);
 		Matrix.multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 	}
 	
@@ -177,6 +200,13 @@ public class Camera {
 		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z],
 				lookingAt[X], lookingAt[Y], lookingAt[Z],
 				up[X], up[Y], up[Z]);
+		Matrix.multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+	}
+	
+	public void frame(int width, int height) {
+		ratio = (float) width / height;
+		
+		Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, nearClip, farClip);
 		Matrix.multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 	}
 }
