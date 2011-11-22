@@ -17,9 +17,9 @@ public class Camera {
 	
 	public static Camera instance = new Camera();
 	
-	public float[] mViewProjectionMatrix = new float[16];
-    public float[] mViewMatrix = new float[16];
-    public float[] mProjectionMatrix = new float[16];
+	public float[] mViewProjectionMatrix;
+    public float[] mViewMatrix;
+    public float[] mProjectionMatrix;
 	
     public float ratio;
     public float nearClip;
@@ -31,6 +31,13 @@ public class Camera {
     
 	private Camera() {
 		ratio = 1.f;
+		
+		location = new float[3];
+		lookingAt = new float[3];
+		up = new float[3];
+		mViewProjectionMatrix = new float[16];
+		mViewMatrix = new float[16];
+		mProjectionMatrix = new float[16];
 		
 		nearClip = DEFAULT_NEAR_CLIP;
 		farClip = DEFAULT_FAR_CLIP;
