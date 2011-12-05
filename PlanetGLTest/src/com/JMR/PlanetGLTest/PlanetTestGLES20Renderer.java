@@ -59,10 +59,10 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		///Matrix.rotateM(_viewProjectionMatrix, 0, mAngle, 0, 0, 1f);
 		///Matrix.rotateM(_viewProjectionMatrix, 0, mAngleZ, 1f, 0, 0);
 		// Matrix.translateM(_cameraMatrix, 0, dX, dY, 0);
-		Camera.instance.rotate(mAngleZ/100.f, 0.f, mAngle/100.f);
+		Camera.instance.rotate(mAngleZ/5.f, 0.f, -mAngle/5.f);
 		
-		PlanetDrawable.light[0] += dX;
-		PlanetDrawable.light[2] += dY;
+//		PlanetDrawable.light[0] += dX;
+//		PlanetDrawable.light[2] += dY;
 		
 		_background.draw(Camera.instance.mViewProjectionMatrix);
 		
