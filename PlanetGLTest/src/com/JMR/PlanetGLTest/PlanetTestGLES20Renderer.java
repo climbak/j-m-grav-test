@@ -59,7 +59,7 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		///Matrix.rotateM(_viewProjectionMatrix, 0, mAngle, 0, 0, 1f);
 		///Matrix.rotateM(_viewProjectionMatrix, 0, mAngleZ, 1f, 0, 0);
 		// Matrix.translateM(_cameraMatrix, 0, dX, dY, 0);
-		Camera.instance.rotate(mAngleZ, 0.f, mAngle);
+		Camera.instance.rotate(mAngleZ/100.f, 0.f, mAngle/100.f);
 		
 		PlanetDrawable.light[0] += dX;
 		PlanetDrawable.light[2] += dY;
@@ -131,6 +131,8 @@ public class PlanetTestGLES20Renderer implements Renderer {
 		 * we enable blending. IF YOU CHANGE THE BLEND FUNC WHEN YOU DRAW YOUR SHIT,
 		 * CHANGE IT THE FUCK BACK SO YOU DON'T SCREW UP EVERYONE ELSE'S SHIT!!
 		 * Seriously. 
+		 * 
+		 * EDIT: Turns out it's probably not. Rather, it's additive blending.
 		 */
 		GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_SRC_COLOR);
 		Log.d("Renderer.onSurfaceCreated$glBlendFunc.error",new Integer(GLES20.glGetError()).toString());

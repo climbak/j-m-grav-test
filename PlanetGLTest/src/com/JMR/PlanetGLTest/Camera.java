@@ -1,6 +1,7 @@
 package com.JMR.PlanetGLTest;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 public class Camera {
 	private static final int X = 0;
@@ -10,6 +11,7 @@ public class Camera {
 	public static final float[] START_LOC = {0.f, 0.f, -3.f};
 	public static final float[] START_LOOK = {0.f, 0.f, 0.f};
 	public static final float[] START_UP = {0.f, 1.f, 0.f};
+	public static final float[] START_RIGHT = {1.f, 0.f, 0.f};
 	
 	public static final float DEFAULT_NEAR_CLIP = 1.f;
 	public static final float DEFAULT_TOP_CLIP = 1.f;
@@ -28,16 +30,23 @@ public class Camera {
     public float[] location;
     public float[] lookingAt;
     public float[] up;
+    public float[] right;
+    public float[] forward;
     
 	private Camera() {
 		ratio = 1.f;
 		
-		location = new float[3];
-		lookingAt = new float[3];
-		up = new float[3];
+		location = new float[4];
+		lookingAt = new float[4];
+		up = new float[4];
+		right = new float[4];
+		forward = new float[4];
 		mViewProjectionMatrix = new float[16];
 		mViewMatrix = new float[16];
 		mProjectionMatrix = new float[16];
+		Matrix.setIdentityM(mProjectionMatrix, 0);
+		Matrix.setIdentityM(mViewMatrix, 0);
+		Matrix.setIdentityM(mViewProjectionMatrix, 0);
 		
 		nearClip = DEFAULT_NEAR_CLIP;
 		farClip = DEFAULT_FAR_CLIP;
@@ -55,11 +64,30 @@ public class Camera {
 		up[Y] = START_UP[Y];
 		up[Z] = START_UP[Z];
 		
+		right[X] = START_RIGHT[X];
+		right[Y] = START_RIGHT[Y];
+		right[Z] = START_RIGHT[Z];
+		
+		forward[X] = lookingAt[X] - location[X];
+		forward[Y] = lookingAt[Y] - location[Y];
+		forward[Z] = lookingAt[Z] - location[Z];
+		
+		float len = Matrix.length(forward[X], forward[Y], forward[Z]);
+		
+		forward[X] /= len;
+		forward[Y] /= len;
+		forward[Z] /= len;
+		
 		Matrix.frustumM(mProjectionMatrix, 0, -ratio*topClip, ratio*topClip, -topClip, topClip, nearClip, farClip);
 		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z], 
 				lookingAt[X], lookingAt[Y], lookingAt[Z], 
 				up[X], up[Y], up[Z]);
 		Matrix.multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+		
+		
+		Log.d("Camera.Camera$mViewMatrix", new Float(mViewMatrix[0]).toString());
+		Log.d("Camera.Camera$mProjectionMatrix", new Float(mProjectionMatrix[0]).toString());
+		Log.d("Camera.Camera$mViewProjectionMatrix", new Float(mViewProjectionMatrix[0]).toString());
 	}
 	
 	// Reset camera to default parameters:
@@ -84,22 +112,8 @@ public class Camera {
 	}
 	
 	// Move the camera forward along its line of sight:
-	public void forward(float amount) {
-		float[] direction = new float[3];
-		
-		direction[X] = lookingAt[X] - location[X];
-		direction[Y] = lookingAt[Y] - location[Y];
-		direction[Z] = lookingAt[Z] - location[Z];
-		
-		float mag = (float) Math.sqrt(direction[X]*direction[X] + 
-				direction[Y]*direction[Y] + 
-				direction[Z]*direction[Z]);
-		
-		direction[X] *= amount/mag;
-		direction[Y] *= amount/mag;
-		direction[Z] *= amount/mag;
-		
-		translate(direction[X], direction[Y], direction[Z]);
+	public void forward(float amount) {		
+		translate(forward[X], forward[Y], forward[Z]);
 	}
 	
 	// Move the camera backwards along its line of sight:
@@ -119,28 +133,8 @@ public class Camera {
 	
 	// Move the camera right relative to its orientation:
 	public void right(float amount) {
-		float[] direction = new float[3];
 		
-		direction[X] = lookingAt[X] - location[X];
-		direction[Y] = lookingAt[Y] - location[Y];
-		direction[Z] = lookingAt[Z] - location[Z];
-		
-		float mag = (float) Math.sqrt(direction[X]*direction[X] + 
-				direction[Y]*direction[Y] + 
-				direction[Z]*direction[Z]);
-		
-		direction[X] /= mag;
-		direction[Y] /= mag;
-		direction[Z] /= mag;
-		
-		float[] cross = new float[3];
-		
-		// Cross product gives us direction to right of camera (right hand rule)
-		cross[X] = direction[Y]*up[Z] - direction[Z]*up[Y];
-		cross[Y] = direction[Z]*up[X] - direction[X]*up[Z];
-		cross[Z] = direction[X]*up[Y] - direction[Y]*up[X];
-		
-		translate(cross[X] * amount, cross[Y] * amount, cross[Z] * amount);
+		translate(right[X] * amount, right[Y] * amount, right[Z] * amount);
 	}
 	
 	// Move the camera left relative to its orientation:
@@ -149,7 +143,7 @@ public class Camera {
 	}
 	
 	// Make the camera look at the given point:
-	public void lookAt(float x, float y, float z) {
+	public void lookAt(float x, float y, float z) { // TODO fix vectors
 		lookingAt[X] = x;
 		lookingAt[Y] = y;
 		lookingAt[Z] = z;
@@ -162,19 +156,28 @@ public class Camera {
 	
 	// Rotate the camera arbitrarily:
 	public void rotate(float pitch, float yaw, float roll) {
+		roll(roll);
 		pitch(pitch);
 		yaw(yaw);
-		roll(roll);
 	}
 	
 	// Yaw the camera:
 	public void yaw(float angle) {
-		lookingAt[X] -= location[X];
-		lookingAt[Z] -= location[Z];
-		lookingAt[X] *= Math.cos(angle);
-		lookingAt[Z] *= Math.sin(angle);
-		lookingAt[X] += location[X];
-		lookingAt[Z] += location[Z];
+		if (angle == 0.f) return;
+		
+		float[] oldLookingAt = new float[4];
+		oldLookingAt = lookingAt;
+//		float[] oldUp = up;
+		float[] oldRight = new float[4];
+		oldRight = right;
+		
+		float[] rot = new float[16];
+		Matrix.setIdentityM(rot, 0);
+		Matrix.setRotateM(rot, 0, angle, up[X], up[Y], up[Z]);
+		
+//		Matrix.multiplyMV(up, 0, rot, 0, oldUp, 0);
+		Matrix.multiplyMV(lookingAt, 0, rot, 0, oldLookingAt, 0);
+		Matrix.multiplyMV(right, 0, rot, 0, oldRight, 0);
 		
 		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z],
 				lookingAt[X], lookingAt[Y], lookingAt[Z],
@@ -184,10 +187,21 @@ public class Camera {
 	
 	// Roll the camera:
 	public void roll(float angle) {
-		// up is always in camera space, so we don't need to translate to the origin
-		//  before rotating.
-		up[X] *= Math.cos(angle);
-		up[Y] *= Math.sin(angle);
+		if (angle == 0.f) return;
+		
+//		float[] oldLookingAt = lookingAt;
+		float[] oldUp = new float[4];
+		oldUp = up;
+		float[] oldRight = new float[4];
+		oldRight = right;
+		
+		float[] rot = new float[16];
+		Matrix.setIdentityM(rot, 0);
+		Matrix.setRotateM(rot, 0, angle, forward[X], forward[Y], forward[Z]);
+		
+		Matrix.multiplyMV(up, 0, rot, 0, oldUp, 0);
+//		Matrix.multiplyMV(lookingAt, 0, rot, 0, oldLookingAt, 0);
+		Matrix.multiplyMV(right, 0, rot, 0, oldRight, 0);
 		
 		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z],
 				lookingAt[X], lookingAt[Y], lookingAt[Z],
@@ -197,12 +211,21 @@ public class Camera {
 	
 	// Pitch the camera:
 	public void pitch(float angle) {
-		lookingAt[Y] -= location[Y];
-		lookingAt[Z] -= location[Z];
-		lookingAt[Y] *= Math.cos(angle);
-		lookingAt[Z] *= Math.sin(angle);
-		lookingAt[Y] += location[Y];
-		lookingAt[Z] += location[Z];
+		if (angle == 0.f) return;
+		
+		float[] oldLookingAt = new float[4];
+		oldLookingAt = lookingAt;
+		float[] oldUp = new float[4];
+		oldUp = up;
+//		float[] oldRight = right;
+		
+		float[] rot = new float[16];
+		Matrix.setIdentityM(rot, 0);
+		Matrix.setRotateM(rot, 0, angle, right[X], right[Y], right[Z]);
+		
+		Matrix.multiplyMV(up, 0, rot, 0, oldUp, 0);
+		Matrix.multiplyMV(lookingAt, 0, rot, 0, oldLookingAt, 0);
+//		Matrix.multiplyMV(right, 0, rot, 0, oldRight, 0);
 		
 		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z],
 				lookingAt[X], lookingAt[Y], lookingAt[Z],
@@ -215,5 +238,9 @@ public class Camera {
 		
 		Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, nearClip, farClip);
 		Matrix.multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+		
+		Log.d("Camera.frame$mViewMatrix", new Float(mViewMatrix[0]).toString());
+		Log.d("Camera.frame$mProjectionMatrix", new Float(mProjectionMatrix[0]).toString());
+		Log.d("Camera.frame$mViewProjectionMatrix", new Float(mViewProjectionMatrix[0]).toString());
 	}
 }
