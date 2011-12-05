@@ -143,7 +143,7 @@ public class Camera {
 	}
 	
 	// Make the camera look at the given point:
-	public void lookAt(float x, float y, float z) { // TODO fix vectors
+	public void lookAt(float x, float y, float z) {
 		lookingAt[X] = x;
 		lookingAt[Y] = y;
 		lookingAt[Z] = z;
@@ -151,6 +151,20 @@ public class Camera {
 		Matrix.setLookAtM(mViewMatrix, 0, location[X], location[Y], location[Z],
 				lookingAt[X], lookingAt[Y], lookingAt[Z],
 				up[X], up[Y], up[Z]);
+				
+		Matrix.multiplyMV(up, 0, mViewMatrix, 0, START_UP, 0);
+		Matrix.multiplyMV(right, 0, mViewMatrix, 0, START_RIGHT, 0);
+		
+		forward[X] = lookingAt[X] - location[X];
+		forward[Y] = lookingAt[Y] - location[Y];
+		forward[Z] = lookingAt[Z] - location[Z];
+		
+		float len = Matrix.length(forward[X], forward[Y], forward[Z]);
+		
+		forward[X] /= len;
+		forward[Y] /= len;
+		forward[Z] /= len;
+		
 		Matrix.multiplyMM(mViewProjectionMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 	}
 	
